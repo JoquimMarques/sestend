@@ -1,5 +1,5 @@
 let activeNotifications = {};
-const BACKEND_URL = window.BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = window.SISTEND_CONFIG ? window.SISTEND_CONFIG.BACKEND_URL : "http://localhost:8000";
 
 function renderMetric(icon, label, id, unit, color = '') {
     return `
