@@ -116,15 +116,37 @@ window.closeNotification = function(key, deviceId) {
     }
 }
 
+function resetCardToZero(id) {
+    const statusEl = document.getElementById(`status-device-${id}`);
+    if (statusEl) {
+        statusEl.innerText = '○ Sem dados do Dispositivo';
+        statusEl.style.color = 'var(--text-dim)';
+    }
+    const metrics = { 'v': 1, 'a': 2, 'p': 1, 'hz': 1, 'kwh': 2, 'pf': 2 };
+    for (let m in metrics) {
+        const el = document.getElementById(`${m}-${id}`);
+        if (el) el.innerText = (0).toFixed(metrics[m]);
+    }
+    const peakEl = document.getElementById(`peak-${id}`);
+    if (peakEl) peakEl.innerText = '+230.0';
+    
+    const releBtn = document.getElementById(`rele-btn-${id}`);
+    if (releBtn) {
+        releBtn.classList.remove('on');
+        releBtn.classList.add('off');
+    }
+}
+
 function atualizarDashboard() {
     fetch(`${BACKEND_URL}/api/dados-recentes/`)
         .then(response => response.json())
         .then(data => {
             if (data.status === "sucesso" && data.dados) {
+                const idsRecebidos = data.dados.map(d => d.device_id.toString());
+
                 data.dados.forEach(item => {
                     const id = item.device_id;
                     
-                    // Se o card ainda não existe, cria ele
                     if (!document.getElementById(`card-${id}`)) {
                         createDeviceCard(item);
                     }
@@ -156,7 +178,7 @@ function atualizarDashboard() {
                         if (typeof item.peak_voltage === 'number' && Number.isFinite(item.peak_voltage)) {
                             peakEl.innerText = `+${item.peak_voltage.toFixed(1)}`;
                         } else {
-                            peakEl.innerText = '+0.0';
+                            peakEl.innerText = '+230.0';
                         }
                     }
                     setValue(`kwh-${id}`, item.energy, 2);
@@ -197,14 +219,17 @@ function atualizarDashboard() {
                         }
                     }
                 });
+
+                // Garante que os fixos 1 e 2 apareçam zerados se não vierem na API
+                ['1', '2'].forEach(id => {
+                    if (!idsRecebidos.includes(id)) resetCardToZero(id);
+                });
             }
         })
         .catch(err => {
             console.error('Erro na atualização:', err);
-            const grid = document.getElementById('device-grid');
-            if (grid && grid.innerHTML.includes('Conectando')) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--accent-red);">Erro ao conectar com o Backend em ${BACKEND_URL}. Verifique se o servidor está rodando.</div>`;
-            }
+            // Se falhar a conexão, reseta os dispositivos fixos para zero em vez de mostrar erro
+            ['1', '2'].forEach(id => resetCardToZero(id));
         });
 }
 
@@ -226,6 +251,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+window.adicionarDispositivo = function() {
+    const nome = prompt("Informe o nome do novo equipamento para simulação:");
+    if (nome && nome.trim() !== "") {
+        fetch(`${BACKEND_URL}/api/receber-dados/`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-ESP32-KEY': '12345' // API Key padrão
+            },
+            body: JSON.stringify({
+                device_id: Math.floor(Math.random() * 1000) + 100, // ID aleatório para mock
+                device_name: nome.trim(),
+                voltage: 0,
+                current: 0,
+                power: 0,
+                is_mock: true
+            })
+        })
+        .then(() => {
+            alert("Dispositivo adicionado para simulação!");
+            atualizarDashboard();
+        })
+        .catch(err => alert("Erro ao adicionar dispositivo: " + err));
+    }
+}
 
 window.toggleRele = function(id) {
     const btn = document.getElementById(`rele-btn-${id}`);

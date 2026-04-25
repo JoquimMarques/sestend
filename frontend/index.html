@@ -35,36 +35,100 @@
                     <span>Registros de Alarmes</span>
                 </a>
                 <a href="#" class="nav-item">
+                    <i data-lucide="battery-low"></i>
+                    <span>Registros de Consumo</span>
+                </a>
+                <a href="#" class="nav-item">
                     <i data-lucide="clipboard-list"></i>
                     <span>Relatório Geral</span>
+                </a>
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                <a href="#" class="nav-item">
+                    <i data-lucide="database"></i>
+                    <span>Base de Dados</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info">
-                    <i data-lucide="globe"></i>
-                    <span>Modo Online (API)</span>
+                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="user"></i>
+                    <span>nelsonuser</span>
                 </div>
+                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </a>
             </div>
         </aside>
 
         <!-- Conteúdo Principal -->
         <main class="main-content">
             <header class="top-header">
-                <div class="header-container">
-                    <button id="mobile-toggle" class="mobile-toggle">
-                        <i data-lucide="menu"></i>
+                <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="mobile-toggle" class="mobile-toggle">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        <div class="page-title-slot">Dashboard de Monitoramento</div>
+                    </div>
+                    <button onclick="adicionarDispositivo()" class="btn-primary" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                        <i data-lucide="plus-circle"></i> Adicionar Dispositivo
                     </button>
-                    <div class="page-title-slot">Dashboard de Monitoramento</div>
                 </div>
             </header>
 
             <div class="page-content">
                 <div id="device-grid" class="dashboard-grid">
-                    <!-- Os cartões dos dispositivos serão injetados aqui via JS -->
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-dim);">
-                        <div class="loader" style="border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
-                        Conectando à API do Backend...
+                    <!-- Dispositivo 1 (Fixo) -->
+                    <div class="equipment-card" id="card-1">
+                        <div id="alert-device-1" style="display: none; margin-bottom: 1rem; padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.4;"></div>
+                        <div class="card-header">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <h3 id="nome-device-1">Dispositivo 1</h3>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <button onclick="editarNome('1')" class="btn-icon-action edit"><i data-lucide="edit-3"></i></button>
+                                    <button id="rele-btn-1" onclick="toggleRele('1')" class="btn-icon-action power off"><i data-lucide="power"></i></button>
+                                </div>
+                            </div>
+                            <span class="metric-label" id="status-device-1">○ Sem dados do Dispositivo</span>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon"></i><span class="metric-label">Tensão</span></div><div class="metric-value-group"><span class="metric-value" id="v-1">0.0</span><span class="metric-unit">V</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="activity" class="metric-icon"></i><span class="metric-label">Corrente</span></div><div class="metric-value-group"><span class="metric-value" id="a-1">0.00</span><span class="metric-unit">A</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--accent-blue);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-1" style="color: var(--accent-blue); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="waves" class="metric-icon"></i><span class="metric-label">Frequência</span></div><div class="metric-value-group"><span class="metric-value" id="hz-1">0.0</span><span class="metric-unit">Hz</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="battery-charging" class="metric-icon"></i><span class="metric-label">Consumo</span></div><div class="metric-value-group"><span class="metric-value" id="kwh-1">0.00</span><span class="metric-unit">kWh</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="percent" class="metric-icon"></i><span class="metric-label">Fator de Potência</span></div><div class="metric-value-group"><span class="metric-value" id="pf-1">0.00</span><span class="metric-unit">PF</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="trending-up" class="metric-icon" style="color: var(--accent-orange);"></i><span class="metric-label">Pico Máximo</span></div><div class="metric-value-group"><span class="metric-value" id="peak-1" style="color: var(--accent-orange); font-weight: bold;">+230.0</span><span class="metric-unit">V</span></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Dispositivo 2 (Fixo) -->
+                    <div class="equipment-card" id="card-2">
+                        <div id="alert-device-2" style="display: none; margin-bottom: 1rem; padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.4;"></div>
+                        <div class="card-header">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <h3 id="nome-device-2">Dispositivo 2</h3>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <button onclick="editarNome('2')" class="btn-icon-action edit"><i data-lucide="edit-3"></i></button>
+                                    <button id="rele-btn-2" onclick="toggleRele('2')" class="btn-icon-action power off"><i data-lucide="power"></i></button>
+                                </div>
+                            </div>
+                            <span class="metric-label" id="status-device-2">○ Sem dados do Dispositivo</span>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon"></i><span class="metric-label">Tensão</span></div><div class="metric-value-group"><span class="metric-value" id="v-2">0.0</span><span class="metric-unit">V</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="activity" class="metric-icon"></i><span class="metric-label">Corrente</span></div><div class="metric-value-group"><span class="metric-value" id="a-2">0.00</span><span class="metric-unit">A</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--accent-blue);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-2" style="color: var(--accent-blue); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="waves" class="metric-icon"></i><span class="metric-label">Frequência</span></div><div class="metric-value-group"><span class="metric-value" id="hz-2">0.0</span><span class="metric-unit">Hz</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="battery-charging" class="metric-icon"></i><span class="metric-label">Consumo</span></div><div class="metric-value-group"><span class="metric-value" id="kwh-2">0.00</span><span class="metric-unit">kWh</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="percent" class="metric-icon"></i><span class="metric-label">Fator de Potência</span></div><div class="metric-value-group"><span class="metric-value" id="pf-2">0.00</span><span class="metric-unit">PF</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="trending-up" class="metric-icon" style="color: var(--accent-orange);"></i><span class="metric-label">Pico Máximo</span></div><div class="metric-value-group"><span class="metric-value" id="peak-2" style="color: var(--accent-orange); font-weight: bold;">+230.0</span><span class="metric-unit">V</span></div></div>
+                        </div>
                     </div>
                 </div>
             </div>
