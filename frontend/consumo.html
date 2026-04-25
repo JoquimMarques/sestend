@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros de Consumo | SistEnd</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Menu Lateral -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="zap" class="logo-icon"></i>
+                <span class="logo-text">Sistend</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="alertas.html" class="nav-item">
+                    <i data-lucide="alert-triangle"></i>
+                    <span>Registros de Alarmes</span>
+                </a>
+                <a href="consumo.html" class="nav-item active">
+                    <i data-lucide="battery-low"></i>
+                    <span>Registros de Consumo</span>
+                </a>
+                <a href="relatorio.html" class="nav-item">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Relatório Geral</span>
+                </a>
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                <a href="base_dados.html" class="nav-item">
+                    <i data-lucide="database"></i>
+                    <span>Base de Dados</span>
+                </a>
+                <a href="configuracoes.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i data-lucide="user"></i>
+                    <span>nelsonuser</span>
+                </div>
+                <a href="login.html" class="logout-link">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-container">
+                    <button id="mobile-toggle" class="mobile-toggle">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-slot">Registros de Consumo</div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Registros de Consumo (kWh)</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">
+                            Exibindo as últimas leituras de energia ativa.
+                        </div>
+                        <button onclick="limparConsumo()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem 1rem;">
+                            <i data-lucide="trash-2"></i> Limpar Tudo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="consumo-table">
+                        <thead>
+                            <tr>
+                                <th>DATA/HORA</th>
+                                <th>EQUIPAMENTO</th>
+                                <th>TENSÃO (V)</th>
+                                <th>CONSUMO (KWH)</th>
+                                <th style="text-align: center;">AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados injetados via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+    
+    <script>
+        window.BACKEND_URL = "http://localhost:8000";
+    </script>
+    <script src="consumo.js"></script>
+</body>
+
+</html>
