@@ -22,6 +22,10 @@ urlpatterns = [
     path('dispositivo/deletar/<int:id>/', views.deletar_dispositivo, name='deletar_dispositivo'),
     path('dispositivo/configurar-consumo/<int:id>/', views.configurar_consumo, name='configurar_consumo'),
     path('api/toggle-rele/<int:id>/', views.toggle_rele, name='toggle_rele'),
+    path('api/alertas/', views.api_alertas, name='api_alertas'),
+    path('api/relatorio/', views.api_relatorio, name='api_relatorio'),
+    path('api/configuracoes/', views.api_configuracoes, name='api_configuracoes'),
+    path('api/limpar-alertas/', views.api_limpar_alertas, name='api_limpar_alertas'),
 
     # Exclusão de dados
     path('relatorio/deletar/<int:id>/', views.deletar_leitura, name='deletar_leitura'),

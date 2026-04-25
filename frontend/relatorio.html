@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório | SistEnd</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Menu Lateral -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="zap" class="logo-icon"></i>
+                <span class="logo-text">Sistend</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="alertas.html" class="nav-item">
+                    <i data-lucide="alert-triangle"></i>
+                    <span>Registros de Alarmes</span>
+                </a>
+                <a href="consumo.html" class="nav-item">
+                    <i data-lucide="battery-low"></i>
+                    <span>Registros de Consumo</span>
+                </a>
+                <a href="relatorio.html" class="nav-item active">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Relatório Geral</span>
+                </a>
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                <a href="base_dados.html" class="nav-item">
+                    <i data-lucide="database"></i>
+                    <span>Base de Dados</span>
+                </a>
+                <a href="configuracoes.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="user"></i>
+                    <span>nelsonuser</span>
+                </div>
+                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="mobile-toggle" class="mobile-toggle">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        <div class="page-title-slot">Relatório Geral</div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Relatórios de Consumo</h2>
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <div id="total-count" style="color: var(--text-dim); font-size: 0.9rem;">Total de registros: 0</div>
+                        <button onclick="limparRelatorio()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem 1rem;">
+                            <i data-lucide="trash-2"></i> Limpar Tudo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="relatorio-table">
+                        <thead>
+                            <tr>
+                                <th>Equipamento</th>
+                                <th>Tensão</th>
+                                <th>Corrente</th>
+                                <th>Potência</th>
+                                <th>Frequência</th>
+                                <th>Energia</th>
+                                <th>Data</th>
+                                <th style="text-align: center;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Injetado via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+    
+    <script>
+        window.BACKEND_URL = "http://localhost:8000";
+    </script>
+    <script src="relatorio.js"></script>
+</body>
+
+</html>

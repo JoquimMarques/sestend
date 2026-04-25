@@ -622,3 +622,71 @@ def toggle_rele(request, id):
         
         return JsonResponse({"status": "sucesso", "rele": eletro.rele_ligado})
     return JsonResponse({"status": "metodo_nao_permitido"}, status=405)
+@csrf_exempt
+def api_alertas(request):
+    """API para retornar os eventos de alertas (PICO, SOBRECORRENTE, etc)"""
+    eventos_qs = Evento.objects.select_related('eletrodomestico').filter(
+        tipo__in=['PICO', 'SOBRECORRENTE', 'SOBRECONSUMO']
+    ).order_by('-data_hora')
+    
+    # Filtros simples
+    tipo = request.GET.get('tipo')
+    if tipo: eventos_qs = eventos_qs.filter(tipo=tipo)
+    
+    sensor = request.GET.get('sensor')
+    if sensor: eventos_qs = eventos_qs.filter(eletrodomestico__numero_sensor=sensor)
+
+    data = []
+    for ev in eventos_qs[:100]: # Limitado a 100 para performance
+        data.append({
+            "id": ev.id,
+            "data_hora": ev.data_hora.isoformat(),
+            "equipamento": ev.eletrodomestico.nome,
+            "tipo": ev.get_tipo_display(),
+            "tipo_slug": ev.tipo,
+            "descricao": ev.descricao
+        })
+    return JsonResponse({"status": "sucesso", "dados": data})
+
+@csrf_exempt
+def api_relatorio(request):
+    """API para retornar o histórico de leituras de energia"""
+    leituras = LeituraEnergia.objects.select_related('eletrodomestico').order_by('-data_hora')[:100]
+    data = []
+    for l in leituras:
+        data.append({
+            "id": l.id,
+            "data_hora": l.data_hora.isoformat(),
+            "equipamento": l.eletrodomestico.nome,
+            "tensao": l.tensao,
+            "corrente": l.corrente,
+            "potencia": l.potencia,
+            "energia": l.energia_kwh
+        })
+    return JsonResponse({"status": "sucesso", "dados": data})
+
+@csrf_exempt
+def api_configuracoes(request):
+    """API para retornar e salvar configurações dos dispositivos"""
+    if request.method == "GET":
+        eletros = _get_dispositivos_sensores()
+        data = []
+        for e in eletros:
+            data.append({
+                "id": e.id,
+                "nome": e.nome,
+                "localizacao": e.localizacao,
+                "limite_tensao": e.limite_tensao,
+                "limite_corrente": e.limite_corrente,
+                "limite_potencia": e.limite_potencia,
+                "numero_sensor": e.numero_sensor
+            })
+        return JsonResponse({"status": "sucesso", "dados": data})
+    return JsonResponse({"status": "metodo_nao_permitido"}, status=405)
+
+@csrf_exempt
+def api_limpar_alertas(request):
+    if request.method == "POST":
+        Evento.objects.all().delete()
+        return JsonResponse({"status": "sucesso"})
+    return JsonResponse({"status": "metodo_nao_permitido"}, status=405)

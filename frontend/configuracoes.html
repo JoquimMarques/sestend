@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações | SistEnd</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        
+        .config-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .config-card h3 { margin-top: 0; margin-bottom: 20px; font-size: 1.4em; display: flex; align-items: center; gap: 10px; }
+        .limites-grupo { background: rgba(0, 0, 0, 0.15); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .limites-grupo h4 { margin-top: 0; margin-bottom: 10px; font-size: 1.05em; opacity: 0.9; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.95em; opacity: 0.9; }
+        .form-group input { 
+            padding: 10px 12px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 6px; 
+            background: rgba(255, 255, 255, 0.1); color: white; font-size: 1em; 
+        }
+        .btn-salvar { 
+            width: 100%; padding: 12px 24px; background: rgba(255, 255, 255, 0.2); 
+            border: 2px solid white; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; 
+        }
+        .sensor-label { background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85em; margin-left: 10px; }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Menu Lateral -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="zap" class="logo-icon"></i>
+                <span class="logo-text">Sistend</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="alertas.html" class="nav-item">
+                    <i data-lucide="alert-triangle"></i>
+                    <span>Registros de Alarmes</span>
+                </a>
+                <a href="consumo.html" class="nav-item">
+                    <i data-lucide="battery-low"></i>
+                    <span>Registros de Consumo</span>
+                </a>
+                <a href="relatorio.html" class="nav-item">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Relatório Geral</span>
+                </a>
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                <a href="base_dados.html" class="nav-item">
+                    <i data-lucide="database"></i>
+                    <span>Base de Dados</span>
+                </a>
+                <a href="configuracoes.html" class="nav-item active">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="user"></i>
+                    <span>nelsonuser</span>
+                </div>
+                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-container">
+                    <button id="mobile-toggle" class="mobile-toggle">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-slot">Configurações de Proteção</div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div id="config-list">
+                    <!-- Cards de configuração injetados via JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+    
+    <script>
+        window.BACKEND_URL = "http://localhost:8000";
+    </script>
+    <script src="configuracoes.js"></script>
+</body>
+
+</html>
