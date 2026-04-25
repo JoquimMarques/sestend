@@ -9,8 +9,7 @@
 // ============================================================
 const char* WIFI_SSID   = "SEU_WIFI_AQUI";
 const char* WIFI_PASS   = "SUA_PASSWORD_AQUI";
-const char* DJANGO_IP   = "192.168.1.100";  // IP do Pc !!
-const int   DJANGO_PORT = 8000;
+const char* DJANGO_HOST = "sistend-api.onrender.com";
 const char* API_KEY     = "12345";
 // ============================================================
 
@@ -189,7 +188,7 @@ void enviarDados(int sensor, float v, float c, float p, float f,
   if (WiFi.status() != WL_CONNECTED) return;
 
   HTTPClient http;
-  String url = "http://" + String(DJANGO_IP) + ":" + String(DJANGO_PORT) + "/api/receber-dados/";
+  String url = "https://" + String(DJANGO_HOST) + "/api/receber-dados/";
   http.begin(url);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-ESP32-KEY", API_KEY);
