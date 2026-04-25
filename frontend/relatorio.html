@@ -12,6 +12,15 @@
     <style>
         .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
         @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        
+        @media print {
+            .sidebar, .top-header, .btn-primary, .btn-icon-action, .mobile-toggle { display: none !important; }
+            .main-content { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
+            .page-content { background: white !important; color: black !important; }
+            table { width: 100% !important; border: 1px solid #ccc !important; }
+            th, td { border-bottom: 1px solid #eee !important; color: black !important; }
+            body { background: white !important; }
+        }
     </style>
 </head>
 
@@ -82,6 +91,9 @@
                     <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Relatórios de Consumo</h2>
                     <div style="display: flex; align-items: center; gap: 1.5rem;">
                         <div id="total-count" style="color: var(--text-dim); font-size: 0.9rem;">Total de registros: 0</div>
+                        <button onclick="window.print()" class="btn-primary" style="background: var(--primary-color); font-size: 0.8rem; padding: 0.5rem 1rem;">
+                            <i data-lucide="file-text"></i> Gerar PDF
+                        </button>
                         <button onclick="limparRelatorio()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem 1rem;">
                             <i data-lucide="trash-2"></i> Limpar Tudo
                         </button>
