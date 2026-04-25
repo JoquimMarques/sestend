@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Cadastro | SistEnd{% endblock %}
+
+{% block content %}
+<style>
+    /* Ocultar navegação na tela de cadastro */
+    .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .top-header {
+        display: none !important;
+    }
+</style>
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i data-lucide="user-plus"></i>
+            <h2>Criar nova conta</h2>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Junte-se ao SistEnd para monitorar seus dispositivos.
+            </p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" name="nome" id="nome" class="form-control" placeholder="Seu nome" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Seu usuário"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="password-input-wrap">
+                    <input type="password" name="password" id="password" class="form-control"
+                        placeholder="Sua senha (mínimo 6 caracteres)" minlength="6" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password', this)"
+                        aria-label="Mostrar ou ocultar senha" title="Mostrar/ocultar senha">
+                        <i data-lucide="eye"></i>
+                    </button>
+                </div>
+                <small style="color: var(--text-dim);">A senha precisa ter no mínimo 6 caracteres.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo de Conta</label>
+                <div class="role-selector">
+                    <div class="role-option">
+                        <input type="radio" name="tipo" value="USER" id="role-user" checked>
+                        <label for="role-user" class="role-label">
+                            <i data-lucide="user"></i>
+                            <span>Usuário</span>
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="tipo" value="ADM" id="role-adm">
+                        <label for="role-adm" class="role-label adm">
+                            <i data-lucide="shield-check"></i>
+                            <span>Administrador</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {% if error %}
+            <p style="color: var(--accent-red); font-size: 0.85rem; margin-bottom: 1rem;">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+                Criar Conta e Iniciar
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Já tem uma conta? <a href="{% url 'login' %}">Faça Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const showing = input.type === 'text';
+        input.type = showing ? 'password' : 'text';
+        btn.innerHTML = showing ? '<i data-lucide="eye"></i>' : '<i data-lucide="eye-off"></i>';
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    // Garantir que os ícones sejam criados mesmo com o delay do template
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+</script>
+{% endblock %}

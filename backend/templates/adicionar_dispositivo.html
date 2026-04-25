@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Adicionar Equipamento | SistEnd{% endblock %}
+{% block page_title %}Adicionar Novo Equipamento{% endblock %}
+{% block content %}
+
+<div class="equipment-card" style="max-width: 600px; margin: 2rem auto;">
+    <div class="card-header">
+        <h3 style="margin: 0;">Novo Equipamento Virtual</h3>
+    </div>
+    <form method="POST" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <label for="nome" style="font-weight: 600; color: var(--text-dim);">Nome do Equipamento</label>
+            <input type="text" name="nome" id="nome" placeholder="Ex: Geladeira Falsa, Ar Condicionado TV" required
+                style="padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-color); font-size: 1rem;">
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;">
+            <i data-lucide="info" style="width: 16px; height: 16px; vertical-align: middle;"></i>
+            Este equipamento será exibido no dashboard com dados zerados (0V, 0A, 0W) para fins de simulação de expansão
+            da rede.
+        </p>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn-primary" style="flex: 1; border: none; font-weight: 600; cursor: pointer;">
+                Confirmar Adição
+            </button>
+            <a href="{% url 'index' %}"
+                style="flex: 1; text-align: center; text-decoration: none; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-color);">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

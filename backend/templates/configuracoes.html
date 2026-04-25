@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configuracoes - SistEnd{% endblock %}
+{% block page_title %}Configuracoes de Protecao{% endblock %}
+
+{% block content %}
+<style>
+    .config-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .config-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .config-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .config-card h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 1.4em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .config-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 0.95em;
+        opacity: 0.9;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .btn-salvar {
+        grid-column: 1 / -1;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .btn-salvar:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.02);
+    }
+
+    .sensor-label {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-left: 10px;
+    }
+
+    .info-box {
+        background: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid rgba(255, 255, 255, 0.5);
+        padding: 12px 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+    }
+
+    .limites-grupo {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .limites-grupo h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.05em;
+        opacity: 0.9;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .config-form {
+            grid-template-columns: 1fr;
+        }
+        
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="config-container">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: #333; margin-bottom: 10px;">Configuracoes de Protecao</h1>
+        <p style="color: #666; margin: 0;">Configure os limites de protecao para cada sensor PZEM</p>
+    </div>
+
+    {% if eletrodomesticos %}
+        {% for eletro in eletrodomesticos %}
+        <div class="config-card">
+            <h3>
+                {{ eletro.nome }}
+                <span class="sensor-label">Sensor {{ eletro.numero_sensor }}</span>
+            </h3>
+
+            <div class="info-box">
+                Instalado: <strong>{{ eletro.data_instalacao|date:"d/m/Y" }}</strong>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="eletro_id" value="{{ eletro.id }}">
+
+                <div class="limites-grupo">
+                    <h4>Configuracoes Gerais</h4>
+                    <div class="form-group">
+                        <label for="nome_{{ eletro.id }}">Nome do Dispositivo</label>
+                        <input type="text" id="nome_{{ eletro.id }}" name="nome" value="{{ eletro.nome }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="localizacao_{{ eletro.id }}">Localização</label>
+                        <input type="text" id="localizacao_{{ eletro.id }}" name="localizacao" value="{{ eletro.localizacao }}" required>
+                    </div>
+                </div>
+
+                <div class="limites-grupo">
+                    <h4>Limites de Tensao (V)</h4>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="limite_tensao_{{ eletro.id }}">Tensão Máxima</label>
+                            <input type="number" id="limite_tensao_{{ eletro.id }}" name="limite_tensao" 
+                                   value="{{ eletro.limite_tensao }}" min="100" max="400" step="0.1" required>
+                            <small style="margin-top: 4px; opacity: 0.7;">Padrão esp-32: 230V</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="limite_subtensao_{{ eletro.id }}">Tensão Mínima</label>
+                            <input type="number" id="limite_subtensao_{{ eletro.id }}" name="limite_subtensao" 
+                                   value="{{ eletro.limite_subtensao }}" min="100" max="250" step="0.1" required>
+                            <small style="margin-top: 4px; opacity: 0.7;">Protecao contra queda</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="limites-grupo">
+                    <h4>Limites de Corrente (A)</h4>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="limite_corrente_{{ eletro.id }}">Corrente Máxima (Normal)</label>
+                            <input type="number" id="limite_corrente_{{ eletro.id }}" name="limite_corrente" 
+                                   value="{{ eletro.limite_corrente }}" min="1" max="50" step="0.1" required>
+                            <small style="margin-top: 4px; opacity: 0.7;">Padrão esp-32: 8A</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="limite_subcorrente_{{ eletro.id }}">Corrente Mínima (Funcional)</label>
+                            <input type="number" id="limite_subcorrente_{{ eletro.id }}" name="limite_subcorrente" 
+                                   value="{{ eletro.limite_subcorrente }}" min="0" max="5" step="0.01" required>
+                            <small style="margin-top: 4px; opacity: 0.7;">Detecta dispositivo desligado</small>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="limite_curto_{{ eletro.id }}">Corrente de Curto-Circuito</label>
+                        <input type="number" id="limite_curto_{{ eletro.id }}" name="limite_curto_circuito" 
+                               value="{{ eletro.limite_curto_circuito }}" min="5" max="100" step="0.1" required>
+                        <small style="margin-top: 4px; opacity: 0.7;">Aciona protecao critica (fusivel)</small>
+                    </div>
+                </div>
+
+                <div class="limites-grupo">
+                    <h4>Limite de Potencia (W)</h4>
+                    <div class="form-group">
+                        <label for="limite_potencia_{{ eletro.id }}">Potencia Maxima</label>
+                        <input type="number" id="limite_potencia_{{ eletro.id }}" name="limite_potencia" 
+                               value="{{ eletro.limite_potencia }}" min="100" max="5000" step="1" required>
+                        <small style="margin-top: 4px; opacity: 0.7;">Padrão esp-32: 1500W por sensor</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-salvar">Salvar Configuracoes (botão)</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="config-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>Nenhum Dispositivo Configurado</h3>
+        <p>Nenhum sensor foi encontrado. Por favor, adicione um novo dispositivo para comecar.</p>
+        <a href="{% url 'adicionar_dispositivo' %}" style="color: white; text-decoration: underline; font-weight: 600;">
+            Adicionar Novo Sensor
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Legenda de Valores Padrão -->
+    <div style="background: #f0f4f8; padding: 20px; border-radius: 8px; margin-top: 30px;">
+        <h4 style="color: #333; margin-top: 0;">Valores Padrao do Codigo C++ (ESP32)</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="border-left: 4px solid #667eea; padding-left: 12px;">
+                <strong>Tensão:</strong> 230V máx<br>
+                <small style="color: #666;">Protetor de picos</small>
+            </div>
+            <div style="border-left: 4px solid #667eea; padding-left: 12px;">
+                <strong>Corrente:</strong> 8A máx<br>
+                <small style="color: #666;">Por sensor PZEM</small>
+            </div>
+            <div style="border-left: 4px solid #667eea; padding-left: 12px;">
+                <strong>Potência:</strong> 1500W máx<br>
+                <small style="color: #666;">Com retenção 12s</small>
+            </div>
+            <div style="border-left: 4px solid #667eea; padding-left: 12px;">
+                <strong>Tempo Bloqueio:</strong> 12 segundos<br>
+                <small style="color: #666;">Mantém relé desligado</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script para validação em tempo real
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.min && parseFloat(this.value) < parseFloat(this.min)) {
+                this.value = this.min;
+            }
+            if (this.max && parseFloat(this.value) > parseFloat(this.max)) {
+                this.value = this.max;
+            }
+        });
+    });
+</script>
+
+{% endblock %}

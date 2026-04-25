@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | SistEnd{% endblock %}
+{% block page_title %}Dashboard de Monitoramento{% endblock %}
+{% block content %}
+{% if user.is_staff %}
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1.25rem;">
+    <a href="{% url 'adicionar_dispositivo' %}" class="btn-primary" style="font-size: 0.9rem; padding: 0.6rem 1rem;">
+        <i data-lucide="plus-circle"></i> Adicionar Dispositivo
+    </a>
+</div>
+{% endif %}
+
+<div class="dashboard-grid">
+    {% for eletrodomestico in eletrodomesticos %}
+    <div class="equipment-card" id="card-{{ eletrodomestico.numero_sensor }}">
+        <!-- Área de Alerta Individual -->
+        <div id="alert-device-{{ eletrodomestico.numero_sensor }}"
+            style="display: none; margin-bottom: 1rem; padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.4;">
+        </div>
+
+        <div class="card-header">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h3 id="nome-device-{{ eletrodomestico.numero_sensor }}" style="margin: 0;">Dispositivo não conectado</h3>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    {% if user.is_staff and eletrodomestico.id %}
+                    <button onclick="editarNome('{{ eletrodomestico.numero_sensor }}')" title="Editar Nome" class="btn-icon-action edit">
+                        <i data-lucide="edit-3"></i>
+                    </button>
+                    {% if eletrodomestico.is_mock %}
+                    <a href="{% url 'deletar_dispositivo' eletrodomestico.id %}"
+                        onclick="return confirm('Deseja eliminar este dispositivo adicionado?')"
+                        title="Eliminar Dispositivo"
+                        class="btn-icon-action delete">
+                        <i data-lucide="trash-2"></i>
+                    </a>
+                    {% endif %}
+                    <button id="rele-btn-{{ eletrodomestico.numero_sensor }}" 
+                        onclick="toggleRele('{{ eletrodomestico.numero_sensor }}')" 
+                        title="Alternar Relé (Corte de Energia)"
+                        class="btn-icon-action power {% if eletrodomestico.rele_ligado %}on{% else %}off{% endif %}">
+                        <i data-lucide="power"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            <span class="metric-label" id="status-device-{{ eletrodomestico.numero_sensor }}">Sem dados do ESP32</span>
+        </div>
+
+        <div class="metrics-list">
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="zap" class="metric-icon"></i>
+                    <span class="metric-label">Tensão</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="v-{{ eletrodomestico.numero_sensor }}">--</span>
+                    <span class="metric-unit">V</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="activity" class="metric-icon"></i>
+                    <span class="metric-label">Corrente</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="a-{{ eletrodomestico.numero_sensor }}">--</span>
+                    <span class="metric-unit">A</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="zap" class="metric-icon" style="color: var(--accent-blue);"></i>
+                    <span class="metric-label">Potência</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="p-{{ eletrodomestico.numero_sensor }}" style="color: var(--accent-blue); font-weight: bold;">--</span>
+                    <span class="metric-unit">W</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="waves" class="metric-icon"></i>
+                    <span class="metric-label">Frequência</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="hz-{{ eletrodomestico.numero_sensor }}">--</span>
+                    <span class="metric-unit">Hz</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="battery-charging" class="metric-icon"></i>
+                    <span class="metric-label">Consumo</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="kwh-{{ eletrodomestico.numero_sensor }}">--</span>
+                    <span class="metric-unit">kWh</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="percent" class="metric-icon"></i>
+                    <span class="metric-label">Fator de Potência</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="pf-{{ eletrodomestico.numero_sensor }}">--</span>
+                    <span class="metric-unit">PF</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label-group">
+                    <i data-lucide="trending-up" class="metric-icon"></i>
+                    <span class="metric-label">Pico Máximo</span>
+                </div>
+                <div class="metric-value-group">
+                    <span class="metric-value" id="peak-{{ eletrodomestico.numero_sensor }}"
+                        style="color: var(--accent-orange);">--</span>
+                    <span class="metric-unit">V</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

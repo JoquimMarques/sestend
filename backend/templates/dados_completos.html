@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load static %}
+
+{% block title %}Base de Dados - SistEnd{% endblock %}
+{% block page_title %}Base de Dados Completa{% endblock %}
+
+{% block content %}
+<style>
+    .dados-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .dispositivo-section {
+        background: var(--card-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .section-header {
+        background: linear-gradient(135deg, rgba(0, 210, 255, 0.14), rgba(58, 123, 213, 0.12));
+        color: var(--text-light);
+        padding: 20px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        font-size: 1.4em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .device-badge {
+        background: rgba(0, 210, 255, 0.15);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: var(--primary-color);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9em;
+    }
+
+    .table-wrapper {
+        padding: 20px 25px;
+        overflow-x: auto;
+        border: none;
+        border-radius: 0;
+        margin-top: 0;
+        background: transparent;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95em;
+        min-width: 860px;
+    }
+
+    table thead {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    table th {
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    table td {
+        padding: 12px;
+        border-bottom: 1px solid var(--glass-border);
+        color: var(--text-light);
+    }
+
+    table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-dim);
+    }
+
+    .value-critical {
+        color: #f5576c;
+        font-weight: 600;
+    }
+
+    .value-warning {
+        color: #ffa502;
+        font-weight: 600;
+    }
+
+    .value-normal {
+        color: #2ecc71;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        table {
+            font-size: 0.85em;
+        }
+
+        table th, table td {
+            padding: 8px;
+        }
+    }
+</style>
+
+<div class="dados-container">
+    <div style="margin-bottom: 30px;">
+        <h1 style="color: var(--text-light); margin-bottom: 10px;">Base de Dados Completa</h1>
+        <p style="color: var(--text-dim); margin: 0;">Visualize todas as leituras e eventos registrados no sistema (dados_completos)</p>
+    </div>
+
+    {% if dados_dispositivos %}
+        {% for dados in dados_dispositivos %}
+        <div class="dispositivo-section">
+            <!-- Cabeçalho -->
+            <div class="section-header">
+                <h2>
+                    {{ dados.eletro.nome }}
+                    <span class="device-badge">Sensor #{{ dados.eletro.numero_sensor }}</span>
+                </h2>
+            </div>
+            <!-- Somente tabela de leituras -->
+            <div class="table-wrapper">
+                {% if dados.ultimas_leituras %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Tensao (V)</th>
+                            <th>Corrente (A)</th>
+                            <th>Potencia (W)</th>
+                            <th>Frequencia (Hz)</th>
+                            <th>Fator Pot.</th>
+                            <th>Energia (kWh)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for leitura in dados.ultimas_leituras %}
+                        <tr>
+                            <td><strong>{{ leitura.data_hora|localtime|date:"d/m/Y H:i:s" }}</strong></td>
+                            <td>
+                                <span class="{% if leitura.tensao > dados.eletro.limite_tensao %}value-critical{% elif leitura.tensao < dados.eletro.limite_subtensao %}value-warning{% else %}value-normal{% endif %}">
+                                    {{ leitura.tensao|default_if_none:0|floatformat:1 }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="{% if leitura.corrente > dados.eletro.limite_corrente %}value-critical{% else %}value-normal{% endif %}">
+                                    {{ leitura.corrente|default_if_none:0|floatformat:2 }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="{% if leitura.potencia > dados.eletro.limite_potencia %}value-critical{% else %}value-normal{% endif %}">
+                                    {{ leitura.potencia|default_if_none:0|floatformat:0 }}
+                                </span>
+                            </td>
+                            <td>{{ leitura.frequencia|default_if_none:0|floatformat:1 }}</td>
+                            <td>{{ leitura.fator_potencia|default_if_none:0|floatformat:2 }}</td>
+                            <td><strong>{{ leitura.energia_kwh|default_if_none:0|floatformat:2 }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-message">
+                    <p>Nenhuma leitura disponivel para este dispositivo</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div style="background: var(--card-bg); padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--glass-border);">
+        <h2 style="color: var(--text-dim);">Nenhum dispositivo com dados</h2>
+        <p style="color: var(--text-dim);">Configure alguns dispositivos e comece a receber dados do ESP32</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

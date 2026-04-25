@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load tz %}
+{% load tz %}
+{% block title %}Relatório | SistEnd{% endblock %}
+{% block page_title %}Relatórios de Consumo{% endblock %}
+{% block content %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Relatórios de Consumo</h2>
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="color: var(--text-dim); font-size: 0.9rem;">
+            Total de registros: {{ leituras.paginator.count }}
+        </div>
+        {% if user.is_staff %}
+        <a href="{% url 'limpar_relatorio' %}"
+            onclick="return confirm('Tem certeza que deseja apagar TODOS os registros do relatório?')"
+            class="btn-primary"
+            style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem 1rem;">
+            <i data-lucide="trash-2"></i> Limpar Tudo
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Equipamento</th>
+                <th>Tensão</th>
+                <th>Corrente</th>
+                <th>Potência</th>
+                <th>Frequência</th>
+                <th>Energia</th>
+                <th>Pico</th>
+                <th>PF</th>
+                <th>Data</th>
+                {% if user.is_staff %}
+                <th style="text-align: center;">Ações</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for leitura in leituras %}
+            <tr>
+                <td style="font-weight: 600; color: var(--primary-color);">{{ leitura.eletrodomestico.nome }}</td>
+                <td>{{ leitura.tensao|default_if_none:0|floatformat:1 }} <small style="color: var(--text-dim);">V</small></td>
+                <td>{{ leitura.corrente|default_if_none:0|floatformat:3 }} <small style="color: var(--text-dim);">A</small></td>
+                <td>{{ leitura.potencia|default_if_none:0|floatformat:1 }} <small style="color: var(--text-dim);">W</small></td>
+                <td>{{ leitura.frequencia|default_if_none:0|floatformat:1 }} <small style="color: var(--text-dim);">Hz</small></td>
+                <td style="font-weight: 500;">{{ leitura.energia_kwh|default_if_none:0|floatformat:4 }} <small
+                        style="color: var(--text-dim);">kWh</small></td>
+                <td style="color: var(--accent-orange); font-weight: 500;">{{ leitura.pico_de_tensao|default:0|floatformat:1 }} <small style="color: var(--text-dim);">V</small></td>
+                <td style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">{{ leitura.fator_potencia|default:0|floatformat:2 }}</td>
+                <td style="color: var(--text-dim); font-size: 0.8rem;">{{ leitura.data_hora|localtime|date:"d/m/Y H:i:s" }}</td>
+                {% if user.is_staff %}
+                <td style="text-align: center;">
+                    <a href="{% url 'deletar_leitura' leitura.id %}"
+                        onclick="return confirm('Deseja excluir este registro?')" class="btn-icon-action delete"
+                        title="Excluir Registro">
+                        <i data-lucide="x-circle"></i>
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if user.is_staff %}10{% else %}9{% endif %}" style="text-align: center; padding: 3rem; color: var(--text-dim);">
+                    Nenhum registro encontrado no relatório.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if leituras.has_other_pages %}
+<div class="pagination">
+    {% if leituras.has_previous %}
+    <a href="?page=1">&laquo;</a>
+    <a href="?page={{ leituras.previous_page_number }}">Anterior</a>
+    {% endif %}
+
+    <span style="padding: 0.5rem 1rem; color: var(--primary-color); font-weight: bold;">
+        {{ leituras.number }} / {{ leituras.paginator.num_pages }}
+    </span>
+
+    {% if leituras.has_next %}
+    <a href="?page={{ leituras.next_page_number }}">Próxima</a>
+    <a href="?page={{ leituras.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

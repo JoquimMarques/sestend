@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SistEnd | Monitoramento{% endblock %}</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Menu Lateral Vertical -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="zap" class="logo-icon"></i>
+                <span class="logo-text">Sistend</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/alertas/" class="nav-item {% if 'alertas' in request.path %}active{% endif %}">
+                    <i data-lucide="alert-triangle"></i>
+                    <span>Registros de Alarmes</span>
+                </a>
+                <a href="/subconsumo/" class="nav-item {% if 'subconsumo' in request.path %}active{% endif %}">
+                    <i data-lucide="battery-low"></i>
+                    <span>Registros de Consumo</span>
+                </a>
+                <a href="/relatorio/" class="nav-item {% if request.path == '/relatorio/' %}active{% endif %}">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Relatório Geral</span>
+                </a>
+                {% if user.is_staff %}
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                <a href="/dados-completos/" class="nav-item {% if 'dados-completos' in request.path %}active{% endif %}">
+                    <i data-lucide="database"></i>
+                    <span>Base de Dados</span>
+                </a>
+                <a href="/configuracoes/" class="nav-item {% if 'configuracoes' in request.path %}active{% endif %}">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+                {% endif %}
+            </nav>
+
+            <div class="sidebar-footer">
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <i data-lucide="user"></i>
+                    <span>{{ user.username }}</span>
+                </div>
+                <a href="/logout/" class="logout-link">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-container">
+                    <button id="mobile-toggle" class="mobile-toggle">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-slot">{% block page_title %}Monitoramento em Tempo Real{% endblock %}</div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="{% static 'js/script.js' %}?v=1.2"></script>
+</body>
+
+</html>
