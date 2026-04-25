@@ -661,6 +661,8 @@ def api_relatorio(request):
             "tensao": l.tensao,
             "corrente": l.corrente,
             "potencia": l.potencia,
+            "frequencia": l.frequencia or 0,
+            "fator_potencia": l.fator_potencia or 0,
             "energia": l.energia_kwh
         })
     return JsonResponse({"status": "sucesso", "dados": data})
