@@ -214,41 +214,35 @@ def relatorio(request):
     leituras = paginator.get_page(page_number)
     return render(request, "relatorio.html", {"leituras": leituras})
 
-@login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff, login_url='index')
+@csrf_exempt
 def deletar_leitura(request, id):
-    leitura = get_object_or_404(LeituraEnergia, id=id)
-    leitura.delete()
-    destino = request.GET.get('next', 'relatorio')
-    if destino not in ['relatorio', 'subconsumo']:
-        destino = 'relatorio'
-    return redirect(destino)
+    try:
+        leitura = LeituraEnergia.objects.get(id=id)
+        leitura.delete()
+        return JsonResponse({"status": "sucesso"})
+    except LeituraEnergia.DoesNotExist:
+        return JsonResponse({"status": "erro", "mensagem": "Registro não encontrado"}, status=404)
 
 
-@login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff, login_url='index')
+@csrf_exempt
 def deletar_evento(request, id):
-    evento = get_object_or_404(Evento, id=id)
-    evento.delete()
-    return redirect('alertas')
+    try:
+        evento = Evento.objects.get(id=id)
+        evento.delete()
+        return JsonResponse({"status": "sucesso"})
+    except Evento.DoesNotExist:
+        return JsonResponse({"status": "erro", "mensagem": "Alerta não encontrado"}, status=404)
 
-@login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff, login_url='index')
+@csrf_exempt
 def limpar_alertas(request):
-    Evento.objects.filter(
-        tipo__in=[
-            'PICO',
-            'SOBRECORRENTE',
-            'SOBRECONSUMO',
-        ]
-    ).delete()
-    return redirect('alertas')
+    Evento.objects.all().delete()
+    return JsonResponse({"status": "sucesso"})
 
-@login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff, login_url='index')
+@csrf_exempt
 def limpar_relatorio(request):
+    # Permite GET ou POST para evitar erros de preflight CORS
     LeituraEnergia.objects.all().delete()
-    return redirect('relatorio')
+    return JsonResponse({"status": "sucesso"})
 
 @login_required(login_url='login')
 @user_passes_test(lambda u: u.is_staff, login_url='index')

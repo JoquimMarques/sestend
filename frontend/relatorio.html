@@ -4,24 +4,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório | SistEnd</title>
+    <title>SistEnd | Relatório</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
-        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
-        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        .main-content { margin-left: 0; padding: 2.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); } }
         
+        /* Estilo Forçado do Botão Ver Mais */
+        .load-more-container {
+            margin: 3rem 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 15px !important;
+        }
+
+        .btn-load-more {
+            background: #a855f7 !important;
+            background: linear-gradient(135deg, #a855f7, #9333ea) !important;
+            border: none !important;
+            color: #ffffff !important;
+            padding: 1rem 3rem !important;
+            border-radius: 16px !important;
+            cursor: pointer !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 12px !important;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4) !important;
+            text-decoration: none !important;
+        }
+
+        .btn-load-more:hover {
+            background: #9333ea !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem !important;
+            color: var(--text-dim) !important;
+        }
+
         @media print {
             .sidebar, .top-header, .btn-primary, .btn-icon-action, .mobile-toggle { display: none !important; }
             .main-content { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
             .page-content { background: white !important; color: black !important; }
             table { width: 100% !important; border: 1px solid #ccc !important; }
-            th, td { border-bottom: 1px solid #eee !important; color: black !important; }
-            body { background: white !important; }
+            th, td { border-bottom: 1px solid #eee !important; color: black !important; font-size: 10pt !important; padding: 8px !important; }
+            body { background: white !important; color: black !important; }
+            .page-title-slot { color: black !important; }
         }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 
 <body>
@@ -31,6 +74,14 @@
             <div class="sidebar-header">
                 <i data-lucide="zap" class="logo-icon"></i>
                 <span class="logo-text">Sistend</span>
+            </div>
+
+            <div class="user-profile-mini">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nelson User</span>
+                    <span class="profile-role">Administrador</span>
+                </div>
             </div>
 
             <nav class="sidebar-nav">
@@ -62,13 +113,9 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="user"></i>
-                    <span>nelsonuser</span>
-                </div>
-                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
                     <i data-lucide="log-out"></i>
-                    <span>Sair</span>
+                    <span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -76,27 +123,59 @@
         <!-- Conteúdo Principal -->
         <main class="main-content">
             <header class="top-header">
-                <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="header-container">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="mobile-toggle" class="mobile-toggle">
+                        <button id="mobile-toggle" class="mobile-toggle" onclick="toggleSidebar()">
                             <i data-lucide="menu"></i>
                         </button>
-                        <div class="page-title-slot">Relatório Geral</div>
+                        <div class="page-title-slot">Relatório</div>
                     </div>
                 </div>
             </header>
 
             <div class="page-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Relatórios de Consumo</h2>
-                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                    <h2 style="font-size: 1.4rem; margin: 0; color: var(--text-light); font-weight: 700;">Relatório Geral</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                         <div id="total-count" style="color: var(--text-dim); font-size: 0.9rem;">Total de registros: 0</div>
-                        <button onclick="window.print()" class="btn-primary" style="background: var(--primary-color); font-size: 0.8rem; padding: 0.5rem 1rem;">
-                            <i data-lucide="file-text"></i> Gerar PDF
+                        <button onclick="document.getElementById('filter-bar-container').style.display = document.getElementById('filter-bar-container').style.display === 'none' ? 'grid' : 'none'" class="btn-primary" style="background: var(--card-bg); border: 1px solid var(--glass-border);">
+                            <i data-lucide="filter"></i> Filtros
                         </button>
-                        <button onclick="limparRelatorio()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); font-size: 0.8rem; padding: 0.5rem 1rem;">
+                        <button onclick="window.print()" class="btn-primary" style="background: var(--accent-purple); color: var(--bg-dark);">
+                            <i data-lucide="printer"></i> Imprimir / PDF
+                        </button>
+                        <button onclick="limparRelatorio()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
                             <i data-lucide="trash-2"></i> Limpar Tudo
                         </button>
+                    </div>
+                </div>
+
+                <div class="filter-bar" id="filter-bar-container" style="display: none;">
+                    <div class="filter-group">
+                        <label>Dispositivo</label>
+                        <select id="filter-sensor" class="form-control">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Início</label>
+                        <input type="date" id="filter-inicio" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label>Fim</label>
+                        <input type="date" id="filter-fim" class="form-control">
+                    </div>
+
+                    <div class="filter-actions">
+                        <div id="filter-count" style="color: var(--text-dim); font-size: 0.9rem;">0 registro(s) encontrado(s)</div>
+                        <div style="display: flex; gap: 0.8rem;">
+                            <button onclick="limparFiltrosUI()" class="btn-icon-action" title="Limpar Filtros">
+                                <i data-lucide="rotate-ccw"></i>
+                            </button>
+                            <button onclick="aplicarFiltros()" class="btn-primary">
+                                <i data-lucide="filter"></i> Aplicar Filtros
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -119,11 +198,18 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div id="pagination-container" class="load-more-container" style="display: none;">
+                    <button id="btn-ver-mais" onclick="verMais()" class="btn-load-more">
+                        <i data-lucide="chevron-down"></i> Ver Mais Registros
+                    </button>
+                    <div id="pagination-info" class="pagination-info">Mostrando 8 de 0 registros</div>
+                </div>
             </div>
         </main>
     </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>

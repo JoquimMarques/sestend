@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SistEnd | Cadastro</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body.auth-page {
+            margin: 0;
+            padding: 1.5rem;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+            background: radial-gradient(circle at center, #1e0b3b, #090e1a) !important;
+            font-family: 'Inter', sans-serif;
+        }
+        .auth-card {
+            background: rgba(30, 41, 59, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(168, 85, 247, 0.3) !important;
+            border-radius: 32px !important;
+            padding: 2.5rem 3rem !important;
+            width: 100% !important;
+            max-width: 450px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+            text-align: center;
+        }
+        .auth-header i { color: #a855f7 !important; width: 40px; height: 40px; margin-bottom: 0.5rem; }
+        .auth-header h2 { margin: 0; font-size: 2rem; color: white !important; font-weight: 800; }
+        .form-group { text-align: left; margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.85rem; }
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(168, 85, 247, 0.2) !important;
+            border-radius: 12px !important;
+            padding: 10px 15px !important;
+            color: white !important;
+            box-sizing: border-box;
+        }
+        .role-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1rem 0; }
+        .role-option { position: relative; }
+        .role-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .role-label {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px;
+            background: rgba(255, 255, 255, 0.05); border: 2px solid transparent; border-radius: 12px;
+            cursor: pointer; transition: all 0.3s; color: #94a3b8; font-size: 0.8rem;
+        }
+        .role-option input:checked + .role-label {
+            background: rgba(168, 85, 247, 0.1); border-color: #a855f7; color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #9333ea) !important;
+            border: none !important; color: white !important; padding: 14px !important;
+            border-radius: 12px !important; width: 100% !important; font-weight: 700 !important;
+            cursor: pointer !important; margin-top: 1rem;
+        }
+        .auth-footer { margin-top: 1.5rem; color: #94a3b8; font-size: 0.85rem; }
+        .auth-footer a { color: #a855f7; text-decoration: none; font-weight: 600; }
+    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
+</head>
+<body class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i data-lucide="user-plus"></i>
+            <h2>Criar Conta</h2>
+            <p style="color: var(--text-dim);">Cadastre-se para acessar o sistema</p>
+        </div>
+
+        <form id="cadastroForm">
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <div style="position: relative;">
+                    <input type="text" id="fullname" class="form-control" placeholder="Ex: João Silva" required style="padding-right: 2.5rem;">
+                    <i data-lucide="user" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email / Usuário</label>
+                <div style="position: relative;">
+                    <input type="text" id="username" class="form-control" placeholder="seu_usuario" required style="padding-right: 2.5rem;">
+                    <i data-lucide="mail" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                </div>
+            </div>
+
+            <label style="margin-bottom: 0.5rem; display: block; font-size: 0.9rem; font-weight: 500; color: #94a3b8;">Nível de Acesso</label>
+            <div class="role-selector">
+                <label class="role-option">
+                    <input type="radio" name="role" value="user" checked>
+                    <div class="role-label">
+                        <i data-lucide="user"></i>
+                        <span>Usuário</span>
+                    </div>
+                </label>
+                <label class="role-option">
+                    <input type="radio" name="role" value="admin">
+                    <div class="role-label">
+                        <i data-lucide="shield-check"></i>
+                        <span>ADM</span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Senha</label>
+                <div style="position: relative;">
+                    <input type="password" class="form-control" placeholder="••••••••" required style="padding-right: 2.5rem;">
+                    <i data-lucide="lock" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; padding: 1.2rem; font-weight: 700;">Finalizar Cadastro</button>
+        </form>
+
+        <div class="auth-footer">
+            Já tem uma conta? <a href="login.html">Fazer Login</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+        
+        document.getElementById('cadastroForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('fullname').value;
+            const username = document.getElementById('username').value.toLowerCase();
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            // Simula salvamento com as novas prioridades
+            localStorage.setItem('sistend_user', JSON.stringify({
+                name: name,
+                username: username,
+                role: role === 'admin' ? 'ADM' : 'Usuário',
+                type: role
+            }));
+
+            alert("Conta criada com sucesso!");
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

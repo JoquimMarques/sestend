@@ -1,27 +1,37 @@
 const BACKEND_URL = window.SISTEND_CONFIG ? window.SISTEND_CONFIG.BACKEND_URL : "http://localhost:8000";
 
+let registrosVisiveis = 8;
+let dadosCompletos = [];
+
 function carregarConsumo() {
-    fetch(`${BACKEND_URL}/api/relatorio/`)
+    fetch(`${BACKEND_URL}/api/relatorio/`, { credentials: 'omit' })
         .then(response => response.json())
         .then(data => {
             if (data.status === "sucesso") {
-                const leiturasConsumo = data.dados.filter(l => l.energia > 0);
-                renderizarTabela(leiturasConsumo);
+                dadosCompletos = data.dados.filter(l => l.energia > 0);
+                renderizarTabela();
             }
         })
         .catch(err => console.error("Erro ao carregar consumo:", err));
 }
 
-function renderizarTabela(leituras) {
+function renderizarTabela() {
     const tbody = document.querySelector('#consumo-table tbody');
+    const paginationContainer = document.getElementById('pagination-container');
+    const paginationInfo = document.getElementById('pagination-info');
+    const btnVerMais = document.getElementById('btn-ver-mais');
+
     tbody.innerHTML = '';
     
-    if (leituras.length === 0) {
+    if (dadosCompletos.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 2rem;">Nenhum registro de consumo encontrado.</td></tr>';
+        if (paginationContainer) paginationContainer.style.display = 'none';
         return;
     }
 
-    leituras.forEach(l => {
+    const leiturasMostrar = dadosCompletos.slice(0, registrosVisiveis);
+
+    leiturasMostrar.forEach(l => {
         const data = new Date(l.data_hora).toLocaleString('pt-BR');
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -34,37 +44,68 @@ function renderizarTabela(leituras) {
                 </span>
             </td>
             <td style="text-align: center;">
-                <button onclick="deletarLeitura(${l.id})" class="btn-icon-action delete" title="Excluir Registro">
-                    <i data-lucide="x-circle"></i>
+                <button onclick="deletarLeitura(${l.id}, this)" class="btn-icon-action delete" title="Excluir Registro">
+                    <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
                 </button>
             </td>
         `;
         tbody.appendChild(tr);
     });
+
+    if (paginationContainer) {
+        paginationContainer.style.display = 'flex';
+        const total = dadosCompletos.length;
+        const visiveis = Math.min(registrosVisiveis, total);
+        paginationInfo.innerText = `Visualizando ${visiveis} registros (Total de ${total} registros no banco)`;
+        
+        if (registrosVisiveis >= total) {
+            btnVerMais.style.display = 'none';
+        } else {
+            btnVerMais.style.display = 'flex';
+        }
+    }
+
     if (window.lucide) lucide.createIcons();
+}
+
+window.verMais = function() {
+    registrosVisiveis += 8;
+    renderizarTabela();
+}
+
+window.deletarLeitura = function(id, btn) {
+    if (confirm('Deseja realmente excluir este registro de consumo?')) {
+        // Efeito instantâneo
+        const row = btn.closest('tr');
+        if (row) {
+            row.style.transition = 'all 0.3s';
+            row.style.opacity = '0';
+            setTimeout(() => row.style.display = 'none', 300);
+        }
+
+        fetch(`${BACKEND_URL}/relatorio/deletar/${id}/`, {
+            method: 'GET',
+            credentials: 'omit'
+        })
+        .then(response => {
+            if (!response.ok) console.warn("Erro silencioso");
+        })
+        .catch(err => console.error("Erro de rede:", err));
+    }
 }
 
 window.limparConsumo = function() {
     if (confirm('Tem certeza que deseja apagar TODOS os registros de consumo?')) {
-        alert("Função pendente na API");
+        document.querySelector('#consumo-table tbody').innerHTML = '';
+        
+        fetch(`${BACKEND_URL}/subconsumo/limpar/`, {
+            method: 'GET',
+            credentials: 'omit'
+        })
+        .catch(err => console.error("Erro ao limpar:", err));
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarConsumo();
-    
-    // Sidebar logic
-    const sidebar = document.getElementById('sidebar');
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (mobileToggle && sidebar && overlay) {
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-    }
 });

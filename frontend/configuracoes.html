@@ -4,39 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações | SistEnd</title>
+    <title>SistEnd | Configurações</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
-        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
-        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        .main-content { margin-left: 0; padding: 2.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); } }
         
         .config-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             padding: 25px;
             margin-bottom: 25px;
-            color: white;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            color: var(--text-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        .config-card h3 { margin-top: 0; margin-bottom: 20px; font-size: 1.4em; display: flex; align-items: center; gap: 10px; }
-        .limites-grupo { background: rgba(0, 0, 0, 0.15); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .limites-grupo h4 { margin-top: 0; margin-bottom: 10px; font-size: 1.05em; opacity: 0.9; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .config-card h3 { margin-top: 0; margin-bottom: 20px; font-size: 1.4em; display: flex; align-items: center; gap: 12px; color: var(--primary-color); }
+        .limites-grupo { background: rgba(168, 85, 247, 0.05); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(168, 85, 247, 0.1); }
+        .limites-grupo h4 { margin-top: 0; margin-bottom: 15px; font-size: 1.05em; color: var(--accent-purple); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
-        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.95em; opacity: 0.9; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: var(--text-dim); }
         .form-group input { 
-            padding: 10px 12px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 6px; 
-            background: rgba(255, 255, 255, 0.1); color: white; font-size: 1em; 
+            padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; 
+            background: rgba(0, 0, 0, 0.2); color: white; font-size: 1em; transition: all 0.3s;
         }
+        .form-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1); }
         .btn-salvar { 
-            width: 100%; padding: 12px 24px; background: rgba(255, 255, 255, 0.2); 
-            border: 2px solid white; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; 
+            width: 100%; padding: 14px; background: var(--primary-color); 
+            border: none; color: white; border-radius: 14px; cursor: pointer; font-weight: 700; transition: all 0.3s;
         }
-        .sensor-label { background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85em; margin-left: 10px; }
+        .btn-salvar:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3); }
+        .sensor-label { background: rgba(168, 85, 247, 0.1); color: var(--primary-color); padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; margin-left: 10px; }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 
 <body>
@@ -46,6 +55,14 @@
             <div class="sidebar-header">
                 <i data-lucide="zap" class="logo-icon"></i>
                 <span class="logo-text">Sistend</span>
+            </div>
+
+            <div class="user-profile-mini">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nelson User</span>
+                    <span class="profile-role">Administrador</span>
+                </div>
             </div>
 
             <nav class="sidebar-nav">
@@ -77,13 +94,9 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="user"></i>
-                    <span>nelsonuser</span>
-                </div>
-                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
                     <i data-lucide="log-out"></i>
-                    <span>Sair</span>
+                    <span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -92,10 +105,12 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="header-container">
-                    <button id="mobile-toggle" class="mobile-toggle">
-                        <i data-lucide="menu"></i>
-                    </button>
-                    <div class="page-title-slot">Configurações de Proteção</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="mobile-toggle" class="mobile-toggle" onclick="toggleSidebar()">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        <div class="page-title-slot">Configurações do Sistema</div>
+                    </div>
                 </div>
             </header>
 
@@ -107,7 +122,7 @@
         </main>
     </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>

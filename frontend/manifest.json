@@ -1,0 +1,22 @@
+{
+  "name": "SistEnd Dashboard",
+  "short_name": "SistEnd",
+  "description": "Sistema de Monitoramento de Energia",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090e1a",
+  "theme_color": "#1e0b3b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -4,26 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertas | SistEnd</title>
+    <title>SistEnd | Alarmes</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
-        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
-        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        .main-content { margin-left: 0; padding: 2.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); } }
         
         .badge-alerta {
-            font-weight: bold;
+            font-weight: 700;
             border: 1px solid currentColor;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
         }
-        .badge-alerta.critico { color: var(--accent-red); }
-        .badge-alerta.normalizado { color: #32CD32; }
-        .badge-alerta.aviso { color: var(--accent-orange); }
+        .badge-alerta.critico { color: var(--accent-red); background: rgba(239, 68, 68, 0.1); }
+        .badge-alerta.normalizado { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+        .badge-alerta.aviso { color: var(--accent-orange); background: rgba(251, 191, 36, 0.1); }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 
 <body>
@@ -33,6 +39,14 @@
             <div class="sidebar-header">
                 <i data-lucide="zap" class="logo-icon"></i>
                 <span class="logo-text">Sistend</span>
+            </div>
+
+            <div class="user-profile-mini">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nelson User</span>
+                    <span class="profile-role">Administrador</span>
+                </div>
             </div>
 
             <nav class="sidebar-nav">
@@ -64,13 +78,9 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="user"></i>
-                    <span>nelsonuser</span>
-                </div>
-                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
                     <i data-lucide="log-out"></i>
-                    <span>Sair</span>
+                    <span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -78,46 +88,62 @@
         <!-- Conteúdo Principal -->
         <main class="main-content">
             <header class="top-header">
-                <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="header-container">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="mobile-toggle" class="mobile-toggle">
+                        <button id="mobile-toggle" class="mobile-toggle" onclick="toggleSidebar()">
                             <i data-lucide="menu"></i>
                         </button>
-                        <div class="page-title-slot">Registros de Alarmes</div>
+                        <div class="page-title-slot">Alarmes</div>
                     </div>
                 </div>
             </header>
 
             <div class="page-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; margin: 0; color: var(--primary-color);">Alertas Recentes</h2>
-                    <button onclick="limparAlertas()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.74); font-size: 0.8rem; padding: 0.5rem 1rem;">
-                        <i data-lucide="trash-2"></i> Limpar Tudo
-                    </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                    <h2 style="font-size: 1.4rem; margin: 0; color: var(--text-light); font-weight: 700;">Alertas Recentes</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="document.getElementById('filter-bar-container').style.display = document.getElementById('filter-bar-container').style.display === 'none' ? 'grid' : 'none'" class="btn-primary" style="background: var(--card-bg); border: 1px solid var(--glass-border);">
+                            <i data-lucide="filter"></i> Filtros
+                        </button>
+                        <button onclick="limparAlertas()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
+                            <i data-lucide="trash-2"></i> Limpar Tudo
+                        </button>
+                    </div>
                 </div>
 
-                <div id="filter-bar" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem; background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 1rem;">
-                    <select id="filter-sensor" class="form-control" style="height: 44px;">
-                        <option value="">Todos Dispositivos</option>
-                    </select>
-                    <select id="filter-tipo" class="form-control" style="height: 44px;">
-                        <option value="">Todos Tipos</option>
-                        <option value="PICO">Pico de Tensão</option>
-                        <option value="SOBRECORRENTE">Sobrecorrente</option>
-                        <option value="NORMALIZADO">Evento Normalizado</option>
-                    </select>
-                    <input type="date" id="filter-inicio" class="form-control" style="height: 44px;">
-                    <input type="date" id="filter-fim" class="form-control" style="height: 44px;">
-                    <input type="text" id="filter-q" placeholder="Buscar na descrição" class="form-control" style="height: 44px;">
+                <div class="filter-bar" id="filter-bar-container" style="display: none;">
+                    <div class="filter-group">
+                        <label>Dispositivo</label>
+                        <select id="filter-sensor" class="form-control">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tipo de Evento</label>
+                        <select id="filter-tipo" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="PICO">Pico de Tensão</option>
+                            <option value="SOBRECORRENTE">Sobrecorrente</option>
+                            <option value="NORMALIZADO">Evento Normalizado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Início</label>
+                        <input type="date" id="filter-inicio" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label>Fim</label>
+                        <input type="date" id="filter-fim" class="form-control">
+                    </div>
 
-                    <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
-                        <div id="filter-count" style="color: var(--text-dim); font-size: 0.92rem;">0 registro(s) encontrado(s)</div>
-                        <div style="display: flex; gap: 0.6rem;">
-                            <button onclick="aplicarFiltros()" class="btn-primary" style="padding: 0.55rem 1rem; font-size: 0.85rem;">
-                                <i data-lucide="filter"></i> Filtrar
+                    <div class="filter-actions">
+                        <div id="filter-count" style="color: var(--text-dim); font-size: 0.9rem;">0 registro(s) encontrado(s)</div>
+                        <div style="display: flex; gap: 0.8rem;">
+                            <button onclick="limparFiltrosUI()" class="btn-icon-action" title="Limpar Filtros">
+                                <i data-lucide="rotate-ccw"></i>
                             </button>
-                            <button onclick="limparFiltrosUI()" class="btn-primary" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(255,255,255,0.08); box-shadow: none;">
-                                <i data-lucide="rotate-ccw"></i> Limpar Filtros
+                            <button onclick="aplicarFiltros()" class="btn-primary">
+                                <i data-lucide="filter"></i> Aplicar Filtros
                             </button>
                         </div>
                     </div>
@@ -135,15 +161,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Dados injetados via JS -->
+                            <!-- Dados via JS -->
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Paginação similar ao Relatório Geral -->
+                <div id="pagination-container" style="display: none; flex-direction: column; align-items: center; margin-top: 2rem; gap: 1rem;">
+                    <button id="btn-ver-mais" onclick="verMais()" class="btn-load-more" style="background: linear-gradient(135deg, #a855f7, #9333ea); border: none; color: white; padding: 0.8rem 2rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                        <i data-lucide="chevron-down"></i> Ver Mais Registros
+                    </button>
+                    <div id="pagination-info" style="color: var(--text-dim); font-size: 0.85rem;"></div>
                 </div>
             </div>
         </main>
     </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>

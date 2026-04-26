@@ -4,16 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SistEnd | Monitoramento Real-Time</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
-        rel="stylesheet">
+    <title>SistEnd | Dashboard</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
         /* Ajustes para versão desacoplada */
         .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
         @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 
 <body>
@@ -25,6 +28,14 @@
                 <span class="logo-text">Sistend</span>
             </div>
 
+            <div class="user-profile-mini">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nelson User</span>
+                    <span class="profile-role">Administrador</span>
+                </div>
+            </div>
+
             <nav class="sidebar-nav">
                 <a href="index.html" class="nav-item active">
                     <i data-lucide="layout-dashboard"></i>
@@ -34,7 +45,7 @@
                     <i data-lucide="alert-triangle"></i>
                     <span>Registros de Alarmes</span>
                 </a>
-                <a href="relatorio.html" class="nav-item">
+                <a href="consumo.html" class="nav-item">
                     <i data-lucide="battery-low"></i>
                     <span>Registros de Consumo</span>
                 </a>
@@ -43,7 +54,7 @@
                     <span>Relatório Geral</span>
                 </a>
                 <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
-                <a href="relatorio.html" class="nav-item">
+                <a href="base_dados.html" class="nav-item">
                     <i data-lucide="database"></i>
                     <span>Base de Dados</span>
                 </a>
@@ -54,13 +65,9 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info" style="margin-bottom: 1rem; color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="user"></i>
-                    <span>nelsonuser</span>
-                </div>
-                <a href="#" class="logout-link" style="color: var(--accent-red); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
                     <i data-lucide="log-out"></i>
-                    <span>Sair</span>
+                    <span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -68,15 +75,15 @@
         <!-- Conteúdo Principal -->
         <main class="main-content">
             <header class="top-header">
-                <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="header-container">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="mobile-toggle" class="mobile-toggle">
+                        <button id="mobile-toggle" class="mobile-toggle" onclick="toggleSidebar()">
                             <i data-lucide="menu"></i>
                         </button>
-                        <div class="page-title-slot">Dashboard de Monitoramento</div>
+                        <div class="page-title-slot">Dashboard</div>
                     </div>
-                    <button onclick="adicionarDispositivo()" class="btn-primary" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
-                        <i data-lucide="plus-circle"></i> Adicionar Dispositivo
+                    <button onclick="adicionarDispositivo()" class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;">
+                        <i data-lucide="plus-circle"></i> Dispositivo
                     </button>
                 </div>
             </header>
@@ -94,12 +101,15 @@
                                     <button id="rele-btn-1" onclick="toggleRele('1')" class="btn-icon-action power off"><i data-lucide="power"></i></button>
                                 </div>
                             </div>
-                            <span class="metric-label" id="status-device-1">○ Sem dados do Dispositivo</span>
+                            <div class="status-badge" id="status-device-1">
+                                <div class="status-dot"></div>
+                                <span>○ Sem dados do Dispositivo</span>
+                            </div>
                         </div>
                         <div class="metrics-list">
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon"></i><span class="metric-label">Tensão</span></div><div class="metric-value-group"><span class="metric-value" id="v-1">0.0</span><span class="metric-unit">V</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="activity" class="metric-icon"></i><span class="metric-label">Corrente</span></div><div class="metric-value-group"><span class="metric-value" id="a-1">0.00</span><span class="metric-unit">A</span></div></div>
-                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--accent-blue);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-1" style="color: var(--accent-blue); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--secondary-color);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-1" style="color: var(--secondary-color); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="waves" class="metric-icon"></i><span class="metric-label">Frequência</span></div><div class="metric-value-group"><span class="metric-value" id="hz-1">0.0</span><span class="metric-unit">Hz</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="battery-charging" class="metric-icon"></i><span class="metric-label">Consumo</span></div><div class="metric-value-group"><span class="metric-value" id="kwh-1">0.00</span><span class="metric-unit">kWh</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="percent" class="metric-icon"></i><span class="metric-label">Fator de Potência</span></div><div class="metric-value-group"><span class="metric-value" id="pf-1">0.00</span><span class="metric-unit">PF</span></div></div>
@@ -118,12 +128,15 @@
                                     <button id="rele-btn-2" onclick="toggleRele('2')" class="btn-icon-action power off"><i data-lucide="power"></i></button>
                                 </div>
                             </div>
-                            <span class="metric-label" id="status-device-2">○ Sem dados do Dispositivo</span>
+                            <div class="status-badge" id="status-device-2">
+                                <div class="status-dot"></div>
+                                <span>○ Sem dados do Dispositivo</span>
+                            </div>
                         </div>
                         <div class="metrics-list">
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon"></i><span class="metric-label">Tensão</span></div><div class="metric-value-group"><span class="metric-value" id="v-2">0.0</span><span class="metric-unit">V</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="activity" class="metric-icon"></i><span class="metric-label">Corrente</span></div><div class="metric-value-group"><span class="metric-value" id="a-2">0.00</span><span class="metric-unit">A</span></div></div>
-                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--accent-blue);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-2" style="color: var(--accent-blue); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
+                            <div class="metric-item"><div class="metric-label-group"><i data-lucide="zap" class="metric-icon" style="color: var(--secondary-color);"></i><span class="metric-label">Potência</span></div><div class="metric-value-group"><span class="metric-value" id="p-2" style="color: var(--secondary-color); font-weight: bold;">0.0</span><span class="metric-unit">W</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="waves" class="metric-icon"></i><span class="metric-label">Frequência</span></div><div class="metric-value-group"><span class="metric-value" id="hz-2">0.0</span><span class="metric-unit">Hz</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="battery-charging" class="metric-icon"></i><span class="metric-label">Consumo</span></div><div class="metric-value-group"><span class="metric-value" id="kwh-2">0.00</span><span class="metric-unit">kWh</span></div></div>
                             <div class="metric-item"><div class="metric-label-group"><i data-lucide="percent" class="metric-icon"></i><span class="metric-label">Fator de Potência</span></div><div class="metric-value-group"><span class="metric-value" id="pf-2">0.00</span><span class="metric-unit">PF</span></div></div>
@@ -135,7 +148,27 @@
         </main>
     </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Modal Adicionar Dispositivo -->
+    <div class="modal-overlay" id="modal-add-device">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Novo Equipamento</h2>
+                <button class="modal-close" onclick="closeModal('modal-add-device')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="device-name-input">Nome do Dispositivo</label>
+                <input type="text" id="device-name-input" placeholder="Ex: Ar Condicionado Sala">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" style="background: rgba(255,255,255,0.05); color: var(--text-dim);" onclick="closeModal('modal-add-device')">Cancelar</button>
+                <button class="btn-primary" onclick="confirmarAdicao()">Adicionar</button>
+            </div>
+        </div>
+    </div>
 
     <style>
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

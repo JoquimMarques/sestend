@@ -3,36 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | SistEnd</title>
+    <title>SistEnd | Login</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        body.auth-page {
+            margin: 0;
+            padding: 1.5rem;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+            background: radial-gradient(circle at center, #1e0b3b, #090e1a) !important;
+            font-family: 'Inter', sans-serif;
+        }
+        .auth-card {
+            background: rgba(30, 41, 59, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(168, 85, 247, 0.3) !important;
+            border-radius: 32px !important;
+            padding: 3rem !important;
+            width: 100% !important;
+            max-width: 400px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+            text-align: center;
+        }
+        .auth-header i {
+            color: #a855f7 !important;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 1rem;
+        }
+        .auth-header h2 {
+            margin: 0;
+            font-size: 2.2rem;
+            color: white !important;
+            font-weight: 800;
+        }
+        .form-group { text-align: left; margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(168, 85, 247, 0.2) !important;
+            border-radius: 12px !important;
+            padding: 12px 15px !important;
+            color: white !important;
+            box-sizing: border-box;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #9333ea) !important;
+            border: none !important;
+            color: white !important;
+            padding: 15px !important;
+            border-radius: 12px !important;
+            width: 100% !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            margin-top: 1rem;
+        }
+        .auth-footer { margin-top: 2rem; color: #94a3b8; font-size: 0.9rem; }
+        .auth-footer a { color: #a855f7; text-decoration: none; font-weight: 600; }
+    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 <body class="auth-page">
     <div class="auth-card">
         <div class="auth-header">
             <i data-lucide="zap"></i>
-            <h2>Sistend</h2>
-            <p style="color: var(--text-dim);">Entre na sua conta para monitorar</p>
+            <h2>SistEnd</h2>
+            <p style="color: var(--text-dim);">Bem-vindo de volta! Faça login para continuar.</p>
         </div>
 
-        <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+        <form id="loginForm">
             <div class="form-group">
-                <label>Usuário</label>
-                <input type="text" class="form-control" placeholder="Seu usuário" required>
+                <label>Usuário ou Email</label>
+                <div style="position: relative;">
+                    <input type="text" id="username" class="form-control" placeholder="Seu usuário" required style="padding-right: 2.5rem;">
+                    <i data-lucide="user" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Senha</label>
-                <input type="password" class="form-control" placeholder="••••••••" required>
+                <div style="position: relative;">
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required style="padding-right: 2.5rem;">
+                    <i data-lucide="lock" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+                </div>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Entrar</button>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; padding: 1.2rem; font-weight: 700;">Entrar no Sistema</button>
         </form>
 
         <div class="auth-footer">
-            Não tem conta? <a href="#">Solicitar Acesso</a>
+            Novo por aqui? <a href="cadastro.html">Criar uma conta</a>
         </div>
     </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+        
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userVal = document.getElementById('username').value.toLowerCase();
+            
+            // Lógica de fallback para a demo: se já cadastrou, usa o que tá no localStorage
+            const savedUser = JSON.parse(localStorage.getItem('sistend_user'));
+            
+            if (savedUser && (userVal === savedUser.username || userVal === savedUser.name.toLowerCase())) {
+                // Já loga com os dados salvos
+                window.location.href = 'index.html';
+            } else if (userVal === 'admin' || userVal === 'nelson') {
+                localStorage.setItem('sistend_user', JSON.stringify({
+                    name: 'Nelson Admin',
+                    username: 'nelson',
+                    role: 'ADM',
+                    type: 'admin'
+                }));
+                window.location.href = 'index.html';
+            } else {
+                localStorage.setItem('sistend_user', JSON.stringify({
+                    name: userVal.charAt(0).toUpperCase() + userVal.slice(1),
+                    username: userVal,
+                    role: 'Usuário',
+                    type: 'user'
+                }));
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -4,42 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base de Dados | SistEnd</title>
+    <title>SistEnd | Base de Dados</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
-        .main-content { margin-left: 0; padding: 1.5rem; width: 100%; box-sizing: border-box; }
-        @media (min-width: 769px) { .main-content { margin-left: 260px; width: calc(100% - 260px); } }
+        .main-content { margin-left: 0; padding: 2.5rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); } }
         
         .dispositivo-section {
             background: var(--card-bg);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
+            border-radius: 28px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
         .section-header {
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.14), rgba(58, 123, 213, 0.12));
+            background: rgba(168, 85, 247, 0.05);
             color: var(--text-light);
             padding: 20px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .section-header h2 { margin: 0; font-size: 1.4em; display: flex; align-items: center; gap: 10px; }
+        .section-header h2 { margin: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--primary-color); }
         .device-badge {
-            background: rgba(0, 210, 255, 0.15);
-            border: 1px solid rgba(0, 210, 255, 0.3);
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
             color: var(--primary-color);
-            padding: 6px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
-        .empty-message { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+        .empty-message { text-align: center; padding: 60px 20px; color: var(--text-dim); font-size: 0.95rem; }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e0b3b">
+    <link rel="apple-touch-icon" href="img/icon-192x192.png">
 </head>
 
 <body>
@@ -49,6 +57,14 @@
             <div class="sidebar-header">
                 <i data-lucide="zap" class="logo-icon"></i>
                 <span class="logo-text">Sistend</span>
+            </div>
+
+            <div class="user-profile-mini">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nelson User</span>
+                    <span class="profile-role">Administrador</span>
+                </div>
             </div>
 
             <nav class="sidebar-nav">
@@ -80,13 +96,9 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-info">
-                    <i data-lucide="user"></i>
-                    <span>nelsonuser</span>
-                </div>
-                <a href="login.html" class="logout-link">
+                <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
                     <i data-lucide="log-out"></i>
-                    <span>Sair</span>
+                    <span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -95,19 +107,16 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="header-container">
-                    <button id="mobile-toggle" class="mobile-toggle">
-                        <i data-lucide="menu"></i>
-                    </button>
-                    <div class="page-title-slot">Base de Dados Completa</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="mobile-toggle" class="mobile-toggle" onclick="toggleSidebar()">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        <div class="page-title-slot">Base de Dados</div>
+                    </div>
                 </div>
             </header>
 
             <div class="page-content">
-                <div style="margin-bottom: 30px;">
-                    <h1 style="color: var(--text-light); margin-bottom: 10px;">Base de Dados Completa</h1>
-                    <p style="color: var(--text-dim); margin: 0;">Visualize todas as leituras e eventos registrados no sistema (dados_completos)</p>
-                </div>
-
                 <div id="database-container">
                     <!-- Cards dos dispositivos injetados via JS -->
                 </div>
@@ -115,7 +124,7 @@
         </main>
     </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>lucide.createIcons();</script>

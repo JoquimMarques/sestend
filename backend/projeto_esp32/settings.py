@@ -77,15 +77,24 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = False
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
     "https://*.vercel.app",
+    "https://*.onrender.com",
 ]
 
 # Configuração para comunicação com ESP32
 ESP32_API_KEY = "12345"
 PICO_MAXIMO_FIXO = 230.0
+
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'x-requested-with',
+]
 
 # Silenciar logs de requisições bem-sucedidas no terminal
 LOGGING = {

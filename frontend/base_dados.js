@@ -81,19 +81,4 @@ function renderizarBaseDados(dispositivos, todasLeituras) {
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarBaseDados();
-    
-    // Sidebar logic
-    const sidebar = document.getElementById('sidebar');
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (mobileToggle && sidebar && overlay) {
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-    }
 });

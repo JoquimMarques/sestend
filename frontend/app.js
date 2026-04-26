@@ -138,7 +138,7 @@ function resetCardToZero(id) {
 }
 
 function atualizarDashboard() {
-    fetch(`${BACKEND_URL}/api/dados-recentes/`)
+    fetch(`${BACKEND_URL}/api/dados-recentes/`, { credentials: 'omit' })
         .then(response => response.json())
         .then(data => {
             if (data.status === "sucesso" && data.dados) {
@@ -235,47 +235,62 @@ function atualizarDashboard() {
 
 setInterval(atualizarDashboard, 1000);
 
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebar = document.getElementById('sidebar');
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const overlay = document.getElementById('sidebar-overlay');
-    
-    if (mobileToggle && sidebar && overlay) {
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-    }
-});
+
+window.closeModal = function(id) {
+    document.getElementById(id).classList.remove('active');
+}
 
 window.adicionarDispositivo = function() {
-    const nome = prompt("Informe o nome do novo equipamento para simulação:");
-    if (nome && nome.trim() !== "") {
-        fetch(`${BACKEND_URL}/api/receber-dados/`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-ESP32-KEY': '12345' // API Key padrão
-            },
-            body: JSON.stringify({
-                device_id: Math.floor(Math.random() * 1000) + 100, // ID aleatório para mock
-                device_name: nome.trim(),
-                voltage: 0,
-                current: 0,
-                power: 0,
-                is_mock: true
-            })
-        })
-        .then(() => {
-            alert("Dispositivo adicionado para simulação!");
-            atualizarDashboard();
-        })
-        .catch(err => alert("Erro ao adicionar dispositivo: " + err));
+    const modal = document.getElementById('modal-add-device');
+    const input = document.getElementById('device-name-input');
+    if (modal && input) {
+        input.value = '';
+        modal.classList.add('active');
+        input.focus();
     }
+}
+
+window.confirmarAdicao = function() {
+    const input = document.getElementById('device-name-input');
+    const nome = input.value.trim();
+    
+    if (!nome) {
+        alert("Por favor, informe um nome para o dispositivo.");
+        return;
+    }
+
+    const mockId = Math.floor(Math.random() * 9000) + 1000;
+    
+    fetch(`${BACKEND_URL}/api/receber-dados/`, {
+        method: 'POST',
+        credentials: 'omit',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-ESP32-KEY': '12345',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            device_id: mockId,
+            device_name: nome,
+            voltage: 0,
+            current: 0,
+            power: 0,
+            frequency: 0,
+            pf: 0,
+            energy: 0,
+            is_mock: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "sucesso") {
+            closeModal('modal-add-device');
+            atualizarDashboard();
+        } else {
+            alert("Erro ao adicionar: " + (data.mensagem || "Erro desconhecido"));
+        }
+    })
+    .catch(err => alert("Erro de conexão: " + err));
 }
 
 window.toggleRele = function(id) {
@@ -287,7 +302,8 @@ window.toggleRele = function(id) {
     btn.style.pointerEvents = 'none';
 
     fetch(`${BACKEND_URL}/api/toggle-rele/${id}/`, {
-        method: 'POST'
+        method: 'POST',
+        credentials: 'omit'
     })
     .then(response => response.json())
     .then(data => {
@@ -307,14 +323,36 @@ window.editarNome = function(id) {
     if (novoNome && novoNome.trim() !== "") {
         fetch(`${BACKEND_URL}/api/editar-dispositivo/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            credentials: 'omit',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
             body: JSON.stringify({ device_id: id, nome: novoNome.trim() })
         })
         .then(response => response.json())
         .then(data => {
             if (data.status !== 'sucesso') {
                 alert("Erro ao renomear: " + (data.mensagem || "Erro desconhecido"));
+            } else {
+                atualizarDashboard();
             }
         });
     }
 }
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
