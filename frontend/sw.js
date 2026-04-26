@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistend-v2';
+const CACHE_NAME = 'sistend-v3';
 
 // Arquivos principais da interface (App Shell)
 const STATIC_ASSETS = [
@@ -23,9 +23,7 @@ const STATIC_ASSETS = [
     './manifest.json',
     './img/favicon/web-app-manifest-192x192.png',
     './img/favicon/web-app-manifest-512x512.png',
-    './img/favicon/favicon.ico',
-    'https://unpkg.com/lucide@latest',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap'
+    './img/favicon/favicon.ico'
 ];
 
 // Instalação do Service Worker - Pre-cache do App Shell
