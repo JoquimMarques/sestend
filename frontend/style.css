@@ -60,6 +60,11 @@ body {
     border-top: 1px solid var(--glass-border) !important;
 }
 
+/* Impede zoom automático em iOS/Android ao focar inputs */
+input, select, textarea {
+    font-size: 16px;
+}
+
 select,
 input[type="date"] {
     background: rgba(255, 255, 255, 0.05) !important;
@@ -67,9 +72,10 @@ input[type="date"] {
     border-radius: 12px !important;
     padding: 10px 15px !important;
     color: white !important;
-    font-size: 0.95rem !important;
+    font-size: 16px !important;
     outline: none !important;
     width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 select option {
@@ -478,8 +484,53 @@ th {
         transform: translateX(0);
     }
 
+    /* Conteúdo principal: respira nas laterais sem estar apertado */
     .main-content {
         margin-left: 0;
+        padding: 1rem 0.85rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Dashboard: uma coluna, cards ocupam largura toda */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+
+    .equipment-card {
+        border-radius: 16px;
+        padding: 1.2rem;
+    }
+
+    /* Tabelas: scroll horizontal fluido, sem deslocar para direita */
+    .table-wrapper {
+        border-radius: 12px;
+        margin: 1rem 0 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    /* Filtros em grid de 1 coluna */
+    .filter-bar {
+        grid-template-columns: 1fr !important;
+        padding: 1.2rem !important;
+        border-radius: 16px !important;
+        gap: 1rem !important;
+    }
+
+    .filter-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+
+    /* Headers de seção nas páginas internas */
+    .top-header {
+        margin-bottom: 1rem;
     }
 }
 
@@ -659,13 +710,25 @@ tbody td {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Estilos de Autenticação Premium */
@@ -691,8 +754,15 @@ tbody td {
 }
 
 @keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .auth-header {
@@ -747,13 +817,18 @@ tbody td {
         left: 0;
         bottom: 0;
     }
+
     .sidebar.active {
         transform: translateX(0);
     }
+
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;
+        padding: 1rem 0.85rem !important;
+        box-sizing: border-box !important;
     }
+
     .mobile-toggle {
         display: block;
     }
@@ -778,7 +853,8 @@ tbody td {
     opacity: 1;
 }
 
-table th, table td {
+table th,
+table td {
     white-space: nowrap;
 }
 
@@ -823,6 +899,7 @@ table th, table td {
     .auth-card {
         padding: 2rem !important;
     }
+
     .auth-header h2 {
         font-size: 2rem !important;
     }
@@ -832,4 +909,28 @@ table th, table td {
     .page-title-slot {
         font-size: 1.1rem !important;
     }
+
+    /* Auth: toca nas laterais */
+    .auth-page {
+        padding: 1rem 0.85rem !important;
+    }
+    .auth-card {
+        padding: 2rem 1.5rem !important;
+        border-radius: 20px !important;
+    }
+
+    /* Cabeçalho das páginas internas: wrap natural */
+    .header-container > div:last-child {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+/* Garante que nenhum elemento ultrapasse a tela */
+.page-content,
+.table-wrapper,
+.filter-bar,
+.dashboard-grid {
+    max-width: 100%;
+    box-sizing: border-box;
 }

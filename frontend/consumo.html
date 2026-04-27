@@ -12,12 +12,17 @@
     <link rel="stylesheet" href="style.css">
     <script src="auth.js"></script>
     <style>
-        .main-content { margin-left: 0; padding: 2.5rem; width: 100%; box-sizing: border-box; }
-        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); } }
+        .main-content { margin-left: 0; padding: 1rem 0.85rem; width: 100%; box-sizing: border-box; }
+        @media (min-width: 769px) { .main-content { margin-left: var(--sidebar-width); padding: 2rem; width: calc(100% - var(--sidebar-width)); } }
     </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e0b3b">
-    <link rel="apple-touch-icon" href="img/icon-192x192.png">
+    
+    <!-- iOS / Safari PWA Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SistEnd">
+    <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
 </head>
 
 <body>
@@ -87,44 +92,15 @@
             </header>
 
             <div class="page-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                     <h2 style="font-size: 1.4rem; margin: 0; color: var(--text-light); font-weight: 700;">Histórico de Consumo</h2>
-                    <div style="display: flex; gap: 1rem;">
-                        <button onclick="document.getElementById('filter-bar-container').style.display = document.getElementById('filter-bar-container').style.display === 'none' ? 'grid' : 'none'" class="btn-primary" style="background: var(--card-bg); border: 1px solid var(--glass-border);">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="abrirModalFiltros()" class="btn-primary" style="background: var(--card-bg); border: 1px solid var(--glass-border);">
                             <i data-lucide="filter"></i> Filtros
                         </button>
                         <button onclick="limparConsumo()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
                             <i data-lucide="trash-2"></i> Limpar Tudo
                         </button>
-                    </div>
-                </div>
-
-                <div class="filter-bar" id="filter-bar-container" style="display: none;">
-                    <div class="filter-group">
-                        <label>Dispositivo</label>
-                        <select id="filter-sensor" class="form-control">
-                            <option value="">Todos</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Início</label>
-                        <input type="date" id="filter-inicio" class="form-control">
-                    </div>
-                    <div class="filter-group">
-                        <label>Fim</label>
-                        <input type="date" id="filter-fim" class="form-control">
-                    </div>
-
-                    <div class="filter-actions">
-                        <div id="filter-count" style="color: var(--text-dim); font-size: 0.9rem;">0 registro(s) encontrado(s)</div>
-                        <div style="display: flex; gap: 0.8rem;">
-                            <button onclick="limparFiltrosUI()" class="btn-icon-action" title="Limpar Filtros">
-                                <i data-lucide="rotate-ccw"></i>
-                            </button>
-                            <button onclick="aplicarFiltros()" class="btn-primary">
-                                <i data-lucide="filter"></i> Aplicar Filtros
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -158,9 +134,50 @@
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
+    <!-- Modal de Filtros - Consumo -->
+    <div class="modal-overlay" id="modal-filtros">
+        <div class="modal-content" style="max-width: 480px; width: 92%;">
+            <div class="modal-header">
+                <h2><i data-lucide="filter" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"></i>Filtrar Consumo</h2>
+                <button class="modal-close" onclick="fecharModalFiltros()"><i data-lucide="x"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Dispositivo</label>
+                <select id="filter-sensor" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Data Início</label>
+                    <input type="date" id="filter-inicio" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;box-sizing:border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Data Fim</label>
+                    <input type="date" id="filter-fim" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div id="filter-count" style="color: var(--text-dim); font-size: 0.85rem; margin-top: 1.2rem;">0 registro(s) encontrado(s)</div>
+
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button onclick="limparFiltrosUI()" class="btn-icon-action" style="padding: 0.7rem 1.2rem; display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="rotate-ccw"></i> Limpar
+                </button>
+                <div style="display:flex;gap:0.75rem;">
+                    <button onclick="fecharModalFiltros()" class="btn-primary" style="background:rgba(255,255,255,0.05);color:var(--text-dim);">Cancelar</button>
+                    <button onclick="aplicarFiltros(); fecharModalFiltros();" class="btn-primary">
+                        <i data-lucide="filter"></i> Aplicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>lucide.createIcons();</script>
-    
+
     <!-- Configuração Central -->
     <script src="config.js"></script>
     <script src="consumo.js"></script>

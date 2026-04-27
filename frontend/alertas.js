@@ -104,8 +104,32 @@ window.aplicarFiltros = carregarAlertas;
 window.limparFiltrosUI = function() {
     document.getElementById('filter-sensor').value = '';
     document.getElementById('filter-tipo').value = '';
+    const ini = document.getElementById('filter-inicio');
+    const fim = document.getElementById('filter-fim');
+    if (ini) ini.value = '';
+    if (fim) fim.value = '';
     carregarAlertas();
 }
+
+window.abrirModalFiltros = function() {
+    const modal = document.getElementById('modal-filtros');
+    if (modal) {
+        modal.classList.add('active');
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+window.fecharModalFiltros = function() {
+    const modal = document.getElementById('modal-filtros');
+    if (modal) modal.classList.remove('active');
+}
+
+// Fecha modal ao clicar no fundo
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'modal-filtros') {
+        window.fecharModalFiltros();
+    }
+});
 
 window.deletarAlerta = function(id, btn) {
     if (confirm('Deseja realmente excluir este alerta?')) {

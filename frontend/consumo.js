@@ -106,6 +106,56 @@ window.limparConsumo = function() {
     }
 }
 
+window.aplicarFiltros = function() {
+    const sensor = document.getElementById('filter-sensor')?.value || '';
+    const inicio = document.getElementById('filter-inicio')?.value || '';
+    const fim = document.getElementById('filter-fim')?.value || '';
+
+    let filtrados = dadosCompletos;
+
+    if (sensor) filtrados = filtrados.filter(l => String(l.device_id) === sensor);
+    if (inicio) filtrados = filtrados.filter(l => new Date(l.data_hora) >= new Date(inicio));
+    if (fim)    filtrados = filtrados.filter(l => new Date(l.data_hora) <= new Date(fim + 'T23:59:59'));
+
+    const countEl = document.getElementById('filter-count');
+    if (countEl) countEl.innerText = `${filtrados.length} registro(s) encontrado(s)`;
+
+    // Usa os dados filtrados para renderizar
+    const backup = dadosCompletos;
+    dadosCompletos = filtrados;
+    registrosVisiveis = 8;
+    renderizarTabela();
+    dadosCompletos = backup;
+}
+
+window.limparFiltrosUI = function() {
+    const s = document.getElementById('filter-sensor');
+    const i = document.getElementById('filter-inicio');
+    const f = document.getElementById('filter-fim');
+    if (s) s.value = '';
+    if (i) i.value = '';
+    if (f) f.value = '';
+    registrosVisiveis = 8;
+    renderizarTabela();
+}
+
+window.abrirModalFiltros = function() {
+    const modal = document.getElementById('modal-filtros');
+    if (modal) {
+        modal.classList.add('active');
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+window.fecharModalFiltros = function() {
+    const modal = document.getElementById('modal-filtros');
+    if (modal) modal.classList.remove('active');
+}
+
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'modal-filtros') window.fecharModalFiltros();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     carregarConsumo();
 });

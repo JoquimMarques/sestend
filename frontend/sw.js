@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistend-v3';
+const CACHE_NAME = 'sistend-v4';
 
 // Arquivos principais da interface (App Shell)
 const STATIC_ASSETS = [
@@ -23,6 +23,7 @@ const STATIC_ASSETS = [
     './manifest.json',
     './img/favicon/web-app-manifest-192x192.png',
     './img/favicon/web-app-manifest-512x512.png',
+    './img/favicon/apple-touch-icon.png',
     './img/favicon/favicon.ico'
 ];
 
