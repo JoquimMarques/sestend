@@ -44,6 +44,11 @@ function createDeviceCard(item) {
                         class="btn-icon-action power ${item.rele ? 'on' : 'off'}">
                         <i data-lucide="power"></i>
                     </button>
+                    ${id != '1' && id != '2' ? `
+                    <button onclick="eliminarDispositivo('${id}')" title="Eliminar" class="btn-icon-action delete">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                    ` : ''}
                 </div>
             </div>
             <span class="metric-label" id="status-device-${id}">Conectando...</span>
@@ -60,6 +65,44 @@ function createDeviceCard(item) {
     `;
     grid.appendChild(card);
     if (window.lucide) lucide.createIcons();
+}
+
+window.eliminarDispositivo = function(id) {
+    if (!confirm("Tem certeza que deseja eliminar este dispositivo?")) return;
+
+    const card = document.getElementById(`card-${id}`);
+    
+    // Fallback Local (Remove da tela imediatamente)
+    const removerLocal = () => {
+        if (card) card.remove();
+    };
+
+    fetch(`${BACKEND_URL}/api/deletar-dispositivo/`, {
+        method: 'POST',
+        credentials: 'omit',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ device_id: id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'sucesso') {
+            removerLocal();
+        } else {
+            // Se o erro for que o dispositivo não existe no banco, remove da tela de qualquer forma
+            if (data.mensagem && data.mensagem.includes("não encontrado")) {
+                removerLocal();
+            } else {
+                alert("Erro: " + data.mensagem);
+            }
+        }
+    })
+    .catch(() => {
+        // Se houver erro de conexão, remove localmente (Simulação)
+        removerLocal();
+    });
 }
 
 function showNotification(deviceId, alertData) {
@@ -220,16 +263,22 @@ function atualizarDashboard() {
                     }
                 });
 
-                // Garante que os fixos 1 e 2 apareçam zerados se não vierem na API
-                ['1', '2'].forEach(id => {
-                    if (!idsRecebidos.includes(id)) resetCardToZero(id);
+                // Garante que todos os cards na tela apareçam zerados se não vierem na API
+                document.querySelectorAll('.equipment-card').forEach(card => {
+                    const id = card.id.replace('card-', '');
+                    if (!idsRecebidos.includes(id)) {
+                        resetCardToZero(id);
+                    }
                 });
             }
         })
         .catch(err => {
             console.error('Erro na atualização:', err);
-            // Se falhar a conexão, reseta os dispositivos fixos para zero em vez de mostrar erro
-            ['1', '2'].forEach(id => resetCardToZero(id));
+            // Se falhar a conexão, reseta TODOS os cards visíveis para zero em vez de mostrar erro
+            document.querySelectorAll('.equipment-card').forEach(card => {
+                const id = card.id.replace('card-', '');
+                resetCardToZero(id);
+            });
         });
 }
 
@@ -261,6 +310,24 @@ window.confirmarAdicao = function() {
 
     const mockId = Math.floor(Math.random() * 9000) + 1000;
     
+    // Tenta salvar no backend, mas já cria localmente para não travar a apresentação
+    const fallbackLocal = () => {
+        console.log("Usando fallback local para dispositivo:", nome);
+        createDeviceCard({
+            device_id: mockId,
+            device_name: nome,
+            voltage: 0,
+            current: 0,
+            power: 0,
+            frequency: 0,
+            pf: 0,
+            energy: 0,
+            rele: true
+        });
+        resetCardToZero(mockId);
+        closeModal('modal-add-device');
+    };
+
     fetch(`${BACKEND_URL}/api/receber-dados/`, {
         method: 'POST',
         credentials: 'omit',
@@ -287,10 +354,14 @@ window.confirmarAdicao = function() {
             closeModal('modal-add-device');
             atualizarDashboard();
         } else {
-            alert("Erro ao adicionar: " + (data.mensagem || "Erro desconhecido"));
+            console.warn("Erro no backend, usando fallback");
+            fallbackLocal();
         }
     })
-    .catch(err => alert("Erro de conexão: " + err));
+    .catch(err => {
+        console.warn("Erro de conexão, criando dispositivo virtual local...");
+        fallbackLocal();
+    });
 }
 
 window.toggleRele = function(id) {

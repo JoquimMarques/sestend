@@ -373,11 +373,16 @@ def _processar_leitura_individual(data, eletro=None):
 
     if eletro is None:
         eletro = Eletrodomestico.objects.filter(numero_sensor=sensor_id).order_by('id').first()
-        if eletro is None and sensor_id in (1, 2):
-            eletro = _criar_dispositivo_padrao(sensor_id)
-
-    if eletro is None:
-        return None, f"Dispositivo {sensor_id} não cadastrado"
+        if eletro is None:
+            # Cria automaticamente se não existir (seja sensor real ou mock do frontend)
+            eletro = Eletrodomestico.objects.create(
+                nome=data.get("device_name", f"Dispositivo {sensor_id}"),
+                localizacao="PWA",
+                numero_sensor=sensor_id,
+                is_mock=data.get("is_mock", False),
+                rele_ligado=True,
+                data_instalacao=date.today()
+            )
 
     # 2. Salvar leitura
     leitura = LeituraEnergia.objects.create(
@@ -583,6 +588,26 @@ def dados_recentes(request):
     })
 
 @csrf_exempt
+def api_deletar_dispositivo(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            sensor_id = data.get("device_id")
+            
+            # Não permite deletar os sensores fixos 1 e 2
+            if sensor_id in [1, 2, "1", "2"]:
+                return JsonResponse({"status": "erro", "mensagem": "Este dispositivo é fixo e não pode ser removido."}, status=403)
+                
+            eletro = Eletrodomestico.objects.filter(numero_sensor=sensor_id).first()
+            if eletro:
+                eletro.delete()
+                return JsonResponse({"status": "sucesso"})
+            else:
+                return JsonResponse({"status": "erro", "mensagem": "Dispositivo não encontrado no banco."}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "erro", "mensagem": str(e)}, status=400)
+    return JsonResponse({"status": "metodo_nao_permitido"}, status=405)
+
 def editar_dispositivo(request):
     """
     Endpoint para renomear os painéis (dispositivos) diretamente do Front-end.

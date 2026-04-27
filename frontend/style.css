@@ -270,8 +270,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Dashboard Grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+}
+
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .equipment-card {
@@ -428,6 +434,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .btn-icon-action.power.off {
     color: var(--text-dim);
     opacity: 0.6;
+}
+
+.btn-icon-action.delete:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: var(--accent-red) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
 /* Tabelas */

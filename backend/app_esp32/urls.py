@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/receber-dados/', views.receber_dados, name='receber_dados'),
     path('api/dados-recentes/', views.dados_recentes, name='dados_recentes'),
     path('api/editar-dispositivo/', views.editar_dispositivo, name='editar_dispositivo'),
+    path('api/deletar-dispositivo/', views.api_deletar_dispositivo, name='api_deletar_dispositivo'),
     
     # Gerenciamento de dispositivos
     path('dispositivo/adicionar/', views.adicionar_dispositivo, name='adicionar_dispositivo'),
