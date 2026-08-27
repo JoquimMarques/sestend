@@ -36,7 +36,7 @@ function renderizarTabela() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${data}</td>
-            <td style="font-weight: 500; color: var(--text-light);">${l.equipamento}</td>
+            <td style="font-weight: 500; color: var(--text-dark);">${l.equipamento}</td>
             <td>${l.tensao.toFixed(1)}V</td>
             <td>
                 <span style="color: var(--primary-color); font-weight: bold; font-family: 'JetBrains Mono', monospace;">

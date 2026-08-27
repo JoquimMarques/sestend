@@ -28,39 +28,36 @@ function createDeviceCard(item) {
     const card = document.createElement('div');
     card.className = 'equipment-card';
     card.id = `card-${id}`;
-    
+    const isMock = String(id) !== '1' && String(id) !== '2';
+
     card.innerHTML = `
-        <div id="alert-device-${id}" style="display: none; margin-bottom: 1rem; padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.4;"></div>
-        <div class="card-header">
-            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <div id="alert-device-${id}" style="display: none; margin-bottom: 0.6rem; padding: 0.7rem; border-radius: 8px; font-size: 0.8rem; line-height: 1.4;"></div>
+        <div class="card-thumbnail-header">
+            <div class="thumbnail-top-bar">
+                <span class="device-badge-tag"><i data-lucide="cpu" style="width:12px;height:12px;margin-right:4px;"></i>SENSOR ${id}</span>
+                <span class="status-badge-corner" id="status-device-${id}">
+                    <span class="status-dot"></span><span>Conectando...</span>
+                </span>
+            </div>
+            <div class="card-title-line">
                 <h3 id="nome-device-${id}">${item.device_name || 'Equipamento'}</h3>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <button onclick="editarNome('${id}')" title="Editar Nome" class="btn-icon-action edit">
-                        <i data-lucide="edit-3"></i>
-                    </button>
-                    <button id="rele-btn-${id}" 
-                        onclick="toggleRele('${id}')" 
-                        title="Alternar Relé"
-                        class="btn-icon-action power ${item.rele ? 'on' : 'off'}">
-                        <i data-lucide="power"></i>
-                    </button>
-                    ${id != '1' && id != '2' ? `
-                    <button onclick="eliminarDispositivo('${id}')" title="Eliminar" class="btn-icon-action delete">
-                        <i data-lucide="trash-2"></i>
-                    </button>
-                    ` : ''}
+                <div class="card-header-actions">
+                    <button onclick="editarNome('${id}')" class="btn-icon-action edit" title="Editar Nome"><i data-lucide="edit-3"></i></button>
+                    <button id="rele-btn-${id}" onclick="toggleRele('${id}')" class="btn-icon-action power ${item.rele ? 'on' : 'off'}" title="Alternar Relé"><i data-lucide="power"></i></button>
+                    ${isMock ? `<button onclick="eliminarDispositivo('${id}')" class="btn-icon-action delete" title="Eliminar"><i data-lucide="trash-2"></i></button>` : ''}
                 </div>
             </div>
-            <span class="metric-label" id="status-device-${id}">Conectando...</span>
         </div>
-        <div class="metrics-list">
-            ${renderMetric('zap', 'Tensão', `v-${id}`, 'V')}
-            ${renderMetric('activity', 'Corrente', `a-${id}`, 'A')}
-            ${renderMetric('zap', 'Potência', `p-${id}`, 'W', 'var(--accent-blue)')}
-            ${renderMetric('waves', 'Frequência', `hz-${id}`, 'Hz')}
-            ${renderMetric('battery-charging', 'Consumo', `kwh-${id}`, 'kWh')}
-            ${renderMetric('percent', 'Fator de Potência', `pf-${id}`, 'PF')}
-            ${renderMetric('trending-up', 'Pico Máximo', `peak-${id}`, 'V', 'var(--accent-orange)')}
+        <div class="card-body-content">
+            <div class="metrics-list">
+                ${renderMetric('zap', 'Tensão', `v-${id}`, 'V')}
+                ${renderMetric('activity', 'Corrente', `a-${id}`, 'A')}
+                ${renderMetric('zap', 'Potência', `p-${id}`, 'W', 'var(--secondary-color)')}
+                ${renderMetric('waves', 'Frequência', `hz-${id}`, 'Hz')}
+                ${renderMetric('battery-charging', 'Consumo', `kwh-${id}`, 'kWh')}
+                ${renderMetric('percent', 'Fator de Potência', `pf-${id}`, 'PF')}
+                ${renderMetric('trending-up', 'Pico Máximo', `peak-${id}`, 'V', 'var(--accent-orange)')}
+            </div>
         </div>
     `;
     grid.appendChild(card);

@@ -42,50 +42,50 @@
         <!-- Menu Lateral -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i data-lucide="zap" class="logo-icon"></i>
-                <span class="logo-text">Sistend</span>
-            </div>
-
-            <div class="user-profile-mini">
-                <div class="profile-avatar">N</div>
-                <div class="profile-info">
-                    <span class="profile-name">Nelson User</span>
-                    <span class="profile-role">Administrador</span>
+                <div class="logo-brand">
+                    <div class="logo-icon-wrap"><i data-lucide="zap"></i></div>
+                    <span class="logo-text">SistEnd</span>
                 </div>
             </div>
 
-            <nav class="sidebar-nav">
-                <a href="index.html" class="nav-item">
-                    <i data-lucide="layout-dashboard"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="alertas.html" class="nav-item active">
-                    <i data-lucide="alert-triangle"></i>
-                    <span>Registros de Alarmes</span>
-                </a>
-                <a href="consumo.html" class="nav-item">
-                    <i data-lucide="battery-low"></i>
-                    <span>Registros de Consumo</span>
-                </a>
-                <a href="relatorio.html" class="nav-item">
-                    <i data-lucide="clipboard-list"></i>
-                    <span>Relatório Geral</span>
-                </a>
-                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
-                <a href="base_dados.html" class="nav-item">
-                    <i data-lucide="database"></i>
-                    <span>Base de Dados</span>
-                </a>
-                <a href="configuracoes.html" class="nav-item">
-                    <i data-lucide="settings"></i>
-                    <span>Configurações</span>
-                </a>
-            </nav>
+            <div class="sidebar-scroll">
+                <div class="sidebar-section-title">Painel de Controlo</div>
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-item">
+                        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+                    </a>
+                    <a href="alertas.html" class="nav-item active">
+                        <i data-lucide="alert-triangle"></i><span>Registros de Alarmes</span>
+                    </a>
+                    <a href="consumo.html" class="nav-item">
+                        <i data-lucide="battery-low"></i><span>Registros de Consumo</span>
+                    </a>
+                    <a href="relatorio.html" class="nav-item">
+                        <i data-lucide="clipboard-list"></i><span>Relatório Geral</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-section-title">Minha Conta</div>
+                <nav class="sidebar-nav">
+                    <a href="base_dados.html" class="nav-item">
+                        <i data-lucide="database"></i><span>Base de Dados</span>
+                    </a>
+                    <a href="configuracoes.html" class="nav-item">
+                        <i data-lucide="settings"></i><span>Configurações</span>
+                    </a>
+                </nav>
+            </div>
 
             <div class="sidebar-footer">
+                <div class="user-profile-mini">
+                    <div class="profile-avatar">N</div>
+                    <div class="profile-info">
+                        <span class="profile-name">Nelson User</span>
+                        <span class="profile-role">Administrador</span>
+                    </div>
+                </div>
                 <a href="login.html" class="logout-link" onclick="localStorage.removeItem('sistend_user')">
-                    <i data-lucide="log-out"></i>
-                    <span>Sair do Sistema</span>
+                    <i data-lucide="log-out"></i><span>Sair do Sistema</span>
                 </a>
             </div>
         </aside>
@@ -105,9 +105,9 @@
 
             <div class="page-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                    <h2 style="font-size: 1.4rem; margin: 0; color: var(--text-light); font-weight: 700;">Alertas Recentes</h2>
+                    <h2 style="font-size: 1.4rem; margin: 0; color: var(--text-dark); font-weight: 700;">Alertas Recentes</h2>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button onclick="abrirModalFiltros()" class="btn-primary" style="background: var(--card-bg); border: 1px solid var(--glass-border);">
+                        <button onclick="abrirModalFiltros()" class="btn-primary" style="background:#f1f5f9;border:1px solid var(--border-color);color:var(--text-dark);">
                             <i data-lucide="filter"></i> Filtros
                         </button>
                         <button onclick="limparAlertas()" class="btn-primary" style="background: var(--accent-red); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
@@ -158,13 +158,13 @@
 
             <div class="form-group">
                 <label>Dispositivo</label>
-                <select id="filter-sensor" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;">
+                <select id="filter-sensor" style="width:100%;outline:none;">
                     <option value="">Todos</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Tipo de Evento</label>
-                <select id="filter-tipo" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;">
+                <select id="filter-tipo" style="width:100%;outline:none;">
                     <option value="">Todos</option>
                     <option value="PICO">Pico de Tensão</option>
                     <option value="SOBRECORRENTE">Sobrecorrente</option>
@@ -174,11 +174,11 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                 <div class="form-group" style="margin-bottom:0;">
                     <label>Data Início</label>
-                    <input type="date" id="filter-inicio" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;box-sizing:border-box;">
+                    <input type="date" id="filter-inicio" style="width:100%;box-sizing:border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
                     <label>Data Fim</label>
-                    <input type="date" id="filter-fim" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:12px 15px;color:white;width:100%;font-size:16px;outline:none;box-sizing:border-box;">
+                    <input type="date" id="filter-fim" style="width:100%;box-sizing:border-box;">
                 </div>
             </div>
 
@@ -189,7 +189,7 @@
                     <i data-lucide="rotate-ccw"></i> Limpar
                 </button>
                 <div style="display:flex;gap:0.75rem;">
-                    <button onclick="fecharModalFiltros()" class="btn-primary" style="background:rgba(255,255,255,0.05);color:var(--text-dim);">Cancelar</button>
+                    <button onclick="fecharModalFiltros()" class="btn-primary" style="background:#f1f5f9;color:var(--text-muted);">Cancelar</button>
                     <button onclick="aplicarFiltros(); fecharModalFiltros();" class="btn-primary">
                         <i data-lucide="filter"></i> Aplicar
                     </button>

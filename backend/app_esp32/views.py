@@ -711,3 +711,12 @@ def api_limpar_alertas(request):
         Evento.objects.all().delete()
         return JsonResponse({"status": "sucesso"})
     return JsonResponse({"status": "metodo_nao_permitido"}, status=405)
+
+@csrf_exempt
+def keep_alive(request):
+    """
+    Endpoint leve para manter o servidor acordado no free tier da Render.
+    Não requer autenticação e não acessa o banco, apenas responde 200 para
+    evitar que a instância entre em "sleep" após inatividade.
+    """
+    return JsonResponse({"status": "ok"})

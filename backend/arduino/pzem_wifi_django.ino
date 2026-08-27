@@ -161,6 +161,12 @@ unsigned long ultimoTempo = 0;
 const long intervalo = 1000;
 
 // =====================
+// RECONEXÃO WIFI (evita que o ESP32 fique sem rede para sempre)
+// =====================
+unsigned long ultimaTentativaWiFi = 0;
+const unsigned long INTERVALO_RECONEXAO = 5000; // tenta reconectar a cada 5s
+
+// =====================
 // DISPLAY BUFFERS
 // =====================
 char v1s[8], i1s[8], p1s[8], f1s[8], fp1s[8];
@@ -268,6 +274,19 @@ void setup() {
 void loop() {
 
   // A lógica do botão agora é tratada por interrupção (trataBotao)
+
+  // ===== RECONEXÃO WIFI =====
+  // Se a rede cair, tenta restabelecer a ligação periodicamente.
+  // O enviarDados() só envia quando WiFi.status() == WL_CONNECTED,
+  // então esta reposição é segura e não bloqueia o loop (reconnect é assíncrono).
+  if (WiFi.status() != WL_CONNECTED) {
+    if (millis() - ultimaTentativaWiFi >= INTERVALO_RECONEXAO) {
+      ultimaTentativaWiFi = millis();
+      Serial.println("WiFi perdido - a tentar reconectar...");
+      WiFi.disconnect();
+      WiFi.reconnect();
+    }
+  }
 
   if (millis() - ultimoTempo >= intervalo) {
     ultimoTempo = millis();

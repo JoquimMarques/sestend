@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/relatorio/', views.api_relatorio, name='api_relatorio'),
     path('api/configuracoes/', views.api_configuracoes, name='api_configuracoes'),
     path('api/limpar-alertas/', views.api_limpar_alertas, name='api_limpar_alertas'),
+    path('api/keep-alive/', views.keep_alive, name='keep_alive'),
 
     # Exclusão de dados
     path('relatorio/deletar/<int:id>/', views.deletar_leitura, name='deletar_leitura'),
