@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistend-v4';
+const CACHE_NAME = 'sistend-v5';
 
 // Arquivos principais da interface (App Shell)
 const STATIC_ASSETS = [
@@ -67,15 +67,17 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Para arquivos da interface, Cache First, com fallback pra Network
+    // Para arquivos da interface, Stale-While-Revalidate:
+    // serve a cache imediatamente (rápido/offline) e atualiza a cache em segundo plano,
+    // assim as alterações novas chegam sozinhas no próximo load sem voltar ao CSS antigo.
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-            return fetch(event.request).then((networkResponse) => {
-                // Guarda em cache o que for pego na rede caso seja do mesmo site
-                if (event.request.url.startsWith(self.location.origin)) {
+            const networkFetch = fetch(event.request).then((networkResponse) => {
+                if (
+                    event.request.url.startsWith(self.location.origin) &&
+                    networkResponse &&
+                    networkResponse.ok
+                ) {
                     const responseClone = networkResponse.clone();
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, responseClone);
@@ -88,6 +90,11 @@ self.addEventListener('fetch', (event) => {
                     return caches.match('./index.html');
                 }
             });
+
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+            return networkFetch;
         })
     );
 });
