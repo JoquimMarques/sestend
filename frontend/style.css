@@ -1083,6 +1083,75 @@ tbody tr:hover {
 
     .filter-bar {
         grid-template-columns: 1fr !important;
+        padding: 1rem !important;
+        gap: 0.9rem !important;
+    }
+
+    .page-title-slot {
+        font-size: 1.3rem;
+    }
+
+    .top-header {
+        margin-bottom: 1rem;
+    }
+
+    .header-container {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Botões mais compactos no telemóvel */
+    .btn-primary {
+        padding: 0.6rem 1.05rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-card-action {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+
+    .btn-search-purple {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    .btn-pro-upgrade {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .btn-load-more {
+        padding: 0.7rem 1.5rem !important;
+        font-size: 0.85rem;
+    }
+
+    /* Tabelas mais compactas no telemóvel */
+    th, td {
+        padding: 0.7rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    th {
+        font-size: 0.72rem;
+    }
+
+    /* Modais e formulários mais compactos */
+    .modal-content {
+        padding: 1.4rem;
+    }
+
+    .form-group input {
+        padding: 0.65rem 0.85rem;
+    }
+
+    .card-body-content {
+        padding: 1rem;
+    }
+
+    .config-card {
+        padding: 18px;
+        margin-bottom: 18px;
     }
 }
 

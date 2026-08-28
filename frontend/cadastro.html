@@ -130,6 +130,15 @@
             text-decoration: none;
             font-weight: 600;
         }
+
+        @media (max-width: 480px) {
+            body.auth-page { padding: 1rem; }
+            .auth-card { padding: 1.6rem 1.4rem !important; border-radius: 24px !important; }
+            .auth-header h2 { font-size: 1.7rem; }
+            .btn-primary { padding: 12px !important; font-size: 0.9rem; }
+            .form-control { padding: 10px 12px !important; }
+            .role-selector { grid-template-columns: 1fr 1fr; gap: 8px; }
+        }
     </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e0b3b">
@@ -200,7 +209,7 @@
             </div>
 
             <button type="submit" class="btn-primary"
-                style="width: 100%; margin-top: 1rem; padding: 1.2rem; font-weight: 700;">Finalizar Cadastro</button>
+                style="width: 100%; margin-top: 1rem; padding: 0.9rem; font-weight: 700;">Finalizar Cadastro</button>
         </form>
 
         <div class="auth-footer">

@@ -65,6 +65,14 @@
         }
         .auth-footer { margin-top: 2rem; color: #94a3b8; font-size: 0.9rem; }
         .auth-footer a { color: #a855f7; text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 480px) {
+            body.auth-page { padding: 1rem; }
+            .auth-card { padding: 1.6rem !important; border-radius: 24px !important; }
+            .auth-header h2 { font-size: 1.7rem; }
+            .btn-primary { padding: 12px !important; font-size: 0.9rem; }
+            .form-control { padding: 10px 12px !important; }
+        }
     </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e0b3b">
@@ -98,7 +106,7 @@
                     <i data-lucide="lock" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
                 </div>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; padding: 1.2rem; font-weight: 700;">Entrar no Sistema</button>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.9rem; font-weight: 700;">Entrar no Sistema</button>
         </form>
 
         <div class="auth-footer">
