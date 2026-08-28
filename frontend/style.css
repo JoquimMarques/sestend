@@ -1100,6 +1100,82 @@ tbody tr:hover {
         gap: 10px;
     }
 
+    /* Botão menu (hambúrguer) compacto */
+    .mobile-toggle {
+        padding: 5px 7px;
+        border-radius: 8px;
+    }
+
+    .mobile-toggle i {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Cabeçalho da página compacto */
+    .page-subtitle {
+        font-size: 0.8rem;
+        margin-top: 1px;
+    }
+
+    /* Sidebar compacta no telemóvel */
+    .sidebar {
+        width: 250px;
+    }
+
+    .sidebar-header {
+        padding: 0.9rem 1rem 0.6rem;
+    }
+
+    .logo-icon-wrap {
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-icon-wrap i {
+        width: 18px;
+        height: 18px;
+    }
+
+    .logo-text {
+        font-size: 1.15rem;
+    }
+
+    .sidebar-section-title {
+        padding: 0.9rem 1.2rem 0.3rem;
+        font-size: 0.65rem;
+    }
+
+    .nav-item {
+        padding: 0.6rem 0.9rem;
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+
+    .nav-item i {
+        width: 17px;
+        height: 17px;
+    }
+
+    .sidebar-footer {
+        padding: 0.6rem 0.6rem 0.9rem;
+    }
+
+    .user-profile-mini {
+        padding: 0.6rem 0.85rem;
+        margin: 0.6rem;
+    }
+
+    .profile-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    .logout-link {
+        padding: 0.55rem 0.9rem;
+        font-size: 0.8rem;
+    }
+
     /* Botões mais compactos no telemóvel */
     .btn-primary {
         padding: 0.6rem 1.05rem;
