@@ -696,9 +696,14 @@ body {
     color: rgba(255, 255, 255, 0.6);
 }
 
+.btn-icon-action.delete {
+    background: rgba(239, 68, 68, 0.12);
+    color: #dc2626;
+}
+
 .btn-icon-action.delete:hover {
     background: rgba(239, 68, 68, 0.3) !important;
-    color: #ef4444 !important;
+    color: #b91c1c !important;
 }
 
 /* Painel Lateral Direito (Dubpix Widgets) */

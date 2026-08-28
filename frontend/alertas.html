@@ -22,10 +22,14 @@
             border-radius: 20px;
             font-size: 0.75rem;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         .badge-alerta.critico { color: var(--accent-red); background: rgba(239, 68, 68, 0.1); }
         .badge-alerta.normalizado { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
         .badge-alerta.aviso { color: var(--accent-orange); background: rgba(251, 191, 36, 0.1); }
+        @media (max-width: 768px) {
+            .badge-alerta { font-size: 0.68rem; padding: 3px 10px; }
+        }
     </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e0b3b">
