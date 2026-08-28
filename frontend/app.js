@@ -122,9 +122,10 @@ function showNotification(deviceId, alertData) {
     const isCritico = alertData.cor === 'red';
     
     alertBox.style.display = 'block';
-    alertBox.style.background = isCritico ? 'rgba(220, 38, 38, 0.18)' : 'rgba(251, 146, 60, 0.20)';
-    alertBox.style.border = `1px solid ${isCritico ? 'rgba(239, 68, 68, 0.75)' : 'rgba(251, 146, 60, 0.70)'}`;
-    alertBox.style.color = isCritico ? '#fecaca' : '#ffedd5';
+    alertBox.style.background = isCritico ? '#dc2626' : '#f59e0b';
+    alertBox.style.border = `1px solid ${isCritico ? '#b91c1c' : '#b45309'}`;
+    alertBox.style.color = '#ffffff';
+    alertBox.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
     alertBox.style.position = 'relative';
 
     alertBox.innerHTML = `
