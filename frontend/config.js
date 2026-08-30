@@ -28,8 +28,7 @@ if ('serviceWorker' in navigator) {
 // KEEP-ALIVE
 // Um cronjob externo (uptime monitor) mantém a instância da
 // Render acordada a cada 5 minutos. Este ping do navegador é
-// apenas um reforço leve, espaçado em 20 minutos, para não
-// sobrecarregar o servidor.
+// apenas um reforço leve, a cada 10 minutos.
 // ============================================================
 function enviarKeepAlive() {
     try {
@@ -39,6 +38,6 @@ function enviarKeepAlive() {
         }).catch(function() { /* silencioso: ignora erros de rede temporários */ });
     } catch (e) { /* ignora */ }
 }
-// Envia um ping imediatamente e depois a cada 20 minutos
+// Envia um ping imediatamente e depois a cada 10 minutos
 enviarKeepAlive();
-setInterval(enviarKeepAlive, 20 * 60 * 1000);
+setInterval(enviarKeepAlive, 10 * 60 * 1000);

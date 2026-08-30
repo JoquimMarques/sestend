@@ -31,7 +31,7 @@ function createDeviceCard(item) {
     const isMock = String(id) !== '1' && String(id) !== '2';
 
     card.innerHTML = `
-        <div id="alert-device-${id}" style="display: none; margin-bottom: 0.6rem; padding: 0.7rem; border-radius: 8px; font-size: 0.8rem; line-height: 1.4;"></div>
+        <div id="alert-device-${id}" class="alert-device"></div>
         <div class="card-thumbnail-header">
             <div class="thumbnail-top-bar">
                 <span class="device-badge-tag"><i data-lucide="cpu" style="width:12px;height:12px;margin-right:4px;"></i>SENSOR ${id}</span>
@@ -120,28 +120,23 @@ function showNotification(deviceId, alertData) {
 
     activeNotifications[key] = { count: 1 };
     const isCritico = alertData.cor === 'red';
-    
+    alertBox.className = 'alert-device ' + (isCritico ? 'critico' : 'aviso');
     alertBox.style.display = 'block';
-    alertBox.style.background = isCritico ? '#dc2626' : '#f59e0b';
-    alertBox.style.border = `1px solid ${isCritico ? '#b91c1c' : '#b45309'}`;
-    alertBox.style.color = '#ffffff';
-    alertBox.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-    alertBox.style.position = 'relative';
 
     alertBox.innerHTML = `
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-            <div style="font-size: 1.2rem;">${alertData.simbolo || '⚠'}</div>
-            <div style="flex: 1;">
-                <div style="font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+        <div class="alert-device-content">
+            <div class="alert-device-icon">${alertData.simbolo || '⚡'}</div>
+            <div class="alert-device-body">
+                <div class="alert-device-title-row">
                     <span>${alertData.tipo}</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span id="toast-count-${key}" class="toast-counter" style="display: none; background: var(--accent-red); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px;">+1</span>
-                        <button onclick="closeNotification('${key}', ${deviceId})" style="background: none; border: none; color: inherit; cursor: pointer; padding: 2px; display: flex; align-items: center; opacity: 0.7;">
+                        <span id="toast-count-${key}" class="toast-counter">+1</span>
+                        <button onclick="closeNotification('${key}', ${deviceId})" class="alert-device-close" aria-label="Fechar alerta">
                             <i data-lucide="x" style="width: 14px; height: 14px;"></i>
                         </button>
                     </div>
                 </div>
-                <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 2px;">${alertData.mensagem}</div>
+                <div class="alert-device-msg">${alertData.mensagem}</div>
             </div>
         </div>
     `;

@@ -26,8 +26,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         .config-card h3 { margin-top: 0; margin-bottom: 20px; font-size: 1.4em; display: flex; align-items: center; gap: 12px; color: var(--primary-color); }
-        .limites-grupo { background: rgba(168, 85, 247, 0.05); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(168, 85, 247, 0.1); }
-        .limites-grupo h4 { margin-top: 0; margin-bottom: 15px; font-size: 1.05em; color: var(--accent-purple); }
+        .limites-grupo { background: rgba(59, 130, 246, 0.05); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(59, 130, 246, 0.1); }
+        .limites-grupo h4 { margin-top: 0; margin-bottom: 15px; font-size: 1.05em; color: var(--primary-color); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
         .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; color: var(--text-muted); }
@@ -35,13 +35,13 @@
             padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; 
             background: #f8fafc; color: var(--text-dark); font-size: 1em; transition: all 0.3s;
         }
-        .form-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1); }
+        .form-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
         .btn-salvar { 
             width: 100%; padding: 14px; background: var(--primary-color); 
             border: none; color: white; border-radius: 14px; cursor: pointer; font-weight: 700; transition: all 0.3s;
         }
-        .btn-salvar:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3); }
-        .sensor-label { background: rgba(168, 85, 247, 0.1); color: var(--primary-color); padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; margin-left: 10px; }
+        .btn-salvar:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
+        .sensor-label { background: rgba(59, 130, 246, 0.1); color: var(--primary-color); padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; margin-left: 10px; }
 
         /* Painel de Teste de Simulação */
         .sim-panel { border: 1px solid rgba(59, 130, 246, 0.25); }
@@ -54,7 +54,7 @@
             background: #f8fafc; color: var(--text-dark); font-size: 1em; transition: all 0.3s;
             width: 100%; box-sizing: border-box;
         }
-        .sim-controls select:focus, .sim-controls input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15); }
+        .sim-controls select:focus, .sim-controls input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
         .sim-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
         .btn-simulacao {
             flex: 1; min-width: 160px; padding: 13px 16px; border: none; border-radius: 12px;
@@ -65,8 +65,8 @@
         .btn-simulacao.pico:hover { background: #dc2626; }
         .btn-simulacao.sobrecorrente { background: #f59e0b; }
         .btn-simulacao.sobrecorrente:hover { background: #d97706; }
-        .btn-simulacao.sobreconsumo { background: #8b5cf6; }
-        .btn-simulacao.sobreconsumo:hover { background: #7c3aed; }
+        .btn-simulacao.sobreconsumo { background: #2563eb; }
+        .btn-simulacao.sobreconsumo:hover { background: #1e40af; }
         .btn-simulacao:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .sim-result { margin-top: 15px; padding: 12px 15px; border-radius: 12px; font-size: 0.9rem; display: none; }
         .sim-result.ok { display: block; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #bbf7d0; }
@@ -81,7 +81,7 @@
         }
     </style>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e0b3b">
+    <meta name="theme-color" content="#0f2440">
     
     <!-- iOS / Safari PWA Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
