@@ -5,78 +5,312 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SistEnd | Login</title>
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* ===================== LAYOUT SPLIT ===================== */
         body.auth-page {
             margin: 0;
-            padding: 1.5rem;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            min-height: 100vh !important;
-            background: radial-gradient(circle at center, #0f2440, #0a1220) !important;
+            padding: 0;
+            min-height: 100vh;
             font-family: 'Inter', sans-serif;
         }
+
+        .auth-split {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* ============ LADO ESQUERDO (INFORMAÇÕES) ============ */
+        .auth-brand {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(150deg, #0b1e3d 0%, #123f8f 55%, #0e2a5c 100%);
+            color: white;
+            padding: 3.5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2.5rem;
+        }
+
+        .auth-brand::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(96, 165, 250, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(37, 99, 235, 0.35) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .auth-brand::after {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 340px;
+            height: 340px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .brand-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 520px;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 2.2rem;
+        }
+
+        .brand-logo i {
+            width: 30px;
+            height: 30px;
+            color: #60a5fa;
+        }
+
+        .brand-title {
+            font-size: 2.55rem;
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -1px;
+            margin: 0 0 1rem;
+        }
+
+        .brand-title span {
+            background: linear-gradient(90deg, #60a5fa, #93c5fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-sub {
+            font-size: 1.02rem;
+            line-height: 1.65;
+            color: rgba(226, 232, 240, 0.85);
+            margin: 0 0 2.2rem;
+        }
+
+        .brand-features {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            margin-bottom: 2.4rem;
+        }
+
+        .brand-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(241, 245, 249, 0.95);
+        }
+
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: rgba(96, 165, 250, 0.16);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-icon i {
+            width: 19px;
+            height: 19px;
+            color: #93c5fd;
+        }
+
+        .brand-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 1.1rem 1rem;
+            text-align: left;
+        }
+
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: block;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: rgba(203, 213, 225, 0.85);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* ============ LADO DIREITO (FORMULÁRIO) ============ */
+        .auth-form-side {
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 2rem;
+        }
+
         .auth-card {
-            background: rgba(30, 41, 59, 0.7) !important;
-            backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(59, 130, 246, 0.3) !important;
-            border-radius: 32px !important;
-            padding: 3rem !important;
-            width: 100% !important;
-            max-width: 400px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 24px !important;
+            padding: 2.6rem 2.5rem !important;
+            box-shadow: 0 20px 50px -20px rgba(15, 23, 42, 0.25) !important;
+            text-align: left;
         }
-        .auth-header i {
-            color: #60a5fa !important;
-            width: 50px;
-            height: 50px;
-            margin-bottom: 1rem;
+
+        .auth-header {
+            margin-bottom: 2rem;
         }
+
+        .auth-header .auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 1.1rem;
+        }
+
         .auth-header h2 {
             margin: 0;
-            font-size: 2.2rem;
-            color: white !important;
+            font-size: 1.7rem;
+            color: var(--text-dark);
             font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .form-group { text-align: left; margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
+
+        .auth-header p {
+            margin: 0.45rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group { text-align: left; margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--text-dark);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-wrap .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 17px;
+            height: 17px;
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
         .form-control {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(59, 130, 246, 0.2) !important;
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
             border-radius: 12px !important;
-            padding: 12px 15px !important;
-            color: white !important;
+            padding: 12px 14px 12px 42px !important;
+            color: var(--text-dark) !important;
+            font-size: 0.92rem;
             box-sizing: border-box;
+            transition: all 0.2s ease;
         }
+
+        .form-control:focus {
+            background: #ffffff !important;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            outline: none;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+            background: linear-gradient(135deg, #2563eb, #1e40af) !important;
             border: none !important;
             color: white !important;
-            padding: 15px !important;
-            border-radius: 12px !important;
             width: 100% !important;
+            padding: 13px !important;
+            border-radius: 12px !important;
             font-weight: 700 !important;
+            font-size: 0.95rem;
             cursor: pointer !important;
-            margin-top: 1rem;
+            margin-top: 0.6rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .auth-footer { margin-top: 2rem; color: #94a3b8; font-size: 0.9rem; }
-        .auth-footer a { color: #60a5fa; text-decoration: none; font-weight: 600; }
 
-        @media (max-width: 480px) {
-            body.auth-page { padding: 1rem; }
-            .auth-card { padding: 1.6rem !important; border-radius: 24px !important; }
-            .auth-header h2 { font-size: 1.7rem; }
-            .btn-primary { padding: 12px !important; font-size: 0.9rem; }
-            .form-control { padding: 10px 12px !important; }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-primary i { width: 17px; height: 17px; }
+
+        .auth-footer {
+            margin-top: 1.8rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+
+        /* ============ RESPONSIVO ============ */
+        @media (max-width: 860px) {
+            .auth-split { grid-template-columns: 1fr; }
+            .auth-brand { display: none; }
+            .auth-form-side { min-height: 100vh; padding: 2rem 1.2rem; }
+            .auth-card { padding: 2rem 1.5rem !important; }
         }
     </style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f2440">
-    
+
     <!-- iOS / Safari PWA Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -84,49 +318,102 @@
     <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
 </head>
 <body class="auth-page">
-    <div class="auth-card">
-        <div class="auth-header">
-            <i data-lucide="zap"></i>
-            <h2>SistEnd</h2>
-            <p style="color: var(--text-dim);">Bem-vindo de volta! Faça login para continuar.</p>
-        </div>
+    <div class="auth-split">
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label>Usuário ou Email</label>
-                <div style="position: relative;">
-                    <input type="text" id="username" class="form-control" placeholder="Seu usuário" required style="padding-right: 2.5rem;">
-                    <i data-lucide="user" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+        <!-- Painel de Informações -->
+        <aside class="auth-brand">
+            <div class="brand-inner">
+                <div class="brand-logo">
+                    <i data-lucide="zap"></i> SistEnd
+                </div>
+
+                <h1 class="brand-title">Monitoramento de energia <span>em tempo real</span></h1>
+                <p class="brand-sub">
+                    O SistEnd acompanha a energia da sua casa ou negócio diretamente da tomada,
+                    dispara alarmes de proteção e organiza todo o histórico em um painel simples e seguro.
+                </p>
+
+                <ul class="brand-features">
+                    <li>
+                        <span class="feature-icon"><i data-lucide="activity"></i></span>
+                        Leituras de tensão, corrente e potência atualizadas a cada segundo
+                    </li>
+                    <li>
+                        <span class="feature-icon"><i data-lucide="bell-ring"></i></span>
+                        Alarmes de pico, sobrecorrente e sobreconsumo com histórico completo
+                    </li>
+                    <li>
+                        <span class="feature-icon"><i data-lucide="bar-chart-3"></i></span>
+                        Relatórios e análise de consumo por dispositivo no celular (PWA)
+                    </li>
+                </ul>
+
+                <div class="brand-stats">
+                    <div class="stat-card">
+                        <span class="stat-value">1s</span>
+                        <span class="stat-label">Atualização</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">3×</span>
+                        <span class="stat-label">Tipos de alarme</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">24/7</span>
+                        <span class="stat-label">Monitoramento</span>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Senha</label>
-                <div style="position: relative;">
-                    <input type="password" id="password" class="form-control" placeholder="••••••••" required style="padding-right: 2.5rem;">
-                    <i data-lucide="lock" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8;"></i>
+        </aside>
+
+        <!-- Formulário -->
+        <main class="auth-form-side">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="auth-badge"><i data-lucide="shield-check" style="width:14px;height:14px;"></i> Acesso seguro</span>
+                    <h2>Bem-vindo de volta</h2>
+                    <p>Entre para acessar o seu painel de monitoramento.</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Usuário ou Email</label>
+                        <div class="input-wrap">
+                            <i data-lucide="user" class="input-icon"></i>
+                            <input type="text" id="username" class="form-control" placeholder="Seu usuário" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="input-wrap">
+                            <i data-lucide="lock" class="input-icon"></i>
+                            <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        Entrar no Sistema <i data-lucide="arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    Novo por aqui? <a href="cadastro.html">Criar uma conta</a>
                 </div>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.9rem; font-weight: 700;">Entrar no Sistema</button>
-        </form>
+        </main>
 
-        <div class="auth-footer">
-            Novo por aqui? <a href="cadastro.html">Criar uma conta</a>
-        </div>
     </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
-        
+
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const userVal = document.getElementById('username').value.toLowerCase();
-            
+
             // Lógica de fallback para a demo: se já cadastrou, usa o que tá no localStorage
             const savedUser = JSON.parse(localStorage.getItem('sistend_user'));
-            
+
             if (savedUser && (userVal === savedUser.username || userVal === savedUser.name.toLowerCase())) {
-                // Já loga com os dados salvos
                 window.location.href = 'index.html';
             } else if (userVal === 'admin' || userVal === 'nelson') {
                 localStorage.setItem('sistend_user', JSON.stringify({
