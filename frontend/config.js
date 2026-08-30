@@ -2,7 +2,7 @@
 const CONFIG = {
     // URL do Backend no Render (exemplo: https://sestend-back.onrender.com)
     // Para teste local, use http://localhost:8000
-    BACKEND_URL: "https://sistend-api.onrender.com",
+    BACKEND_URL: "https://sestendy.onrender.com",
     
     // Nome do utilizador padrão para exibição
     USER_NAME: "nelsonuser"
@@ -26,11 +26,10 @@ if ('serviceWorker' in navigator) {
 
 // ============================================================
 // KEEP-ALIVE
-// Mantém o servidor (free tier da Render) acordado.
-// A Render põe a instância em "sleep" após ~15min sem tráfego,
-// o que causava demoras de 30-50s (cold start) no ESP32 e no app.
-// Este ping leve (a cada 10min) evita que a instância adormeça
-// enquanto a aplicação estiver aberta.
+// Um cronjob externo (uptime monitor) mantém a instância da
+// Render acordada a cada 5 minutos. Este ping do navegador é
+// apenas um reforço leve, espaçado em 20 minutos, para não
+// sobrecarregar o servidor.
 // ============================================================
 function enviarKeepAlive() {
     try {
@@ -40,6 +39,6 @@ function enviarKeepAlive() {
         }).catch(function() { /* silencioso: ignora erros de rede temporários */ });
     } catch (e) { /* ignora */ }
 }
-// Envia um ping imediatamente e depois a cada 10 minutos
+// Envia um ping imediatamente e depois a cada 20 minutos
 enviarKeepAlive();
-setInterval(enviarKeepAlive, 10 * 60 * 1000);
+setInterval(enviarKeepAlive, 20 * 60 * 1000);

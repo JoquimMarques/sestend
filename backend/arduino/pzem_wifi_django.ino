@@ -9,7 +9,7 @@
 // ============================================================
 const char* WIFI_SSID   = "SEU_WIFI_AQUI";
 const char* WIFI_PASS   = "SUA_PASSWORD_AQUI";
-const char* DJANGO_HOST = "sistend-api.onrender.com";
+const char* DJANGO_HOST = "sestendy.onrender.com";
 const char* API_KEY     = "12345";
 // ============================================================
 
